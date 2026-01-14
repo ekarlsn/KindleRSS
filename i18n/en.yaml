@@ -1,0 +1,69 @@
+# English translations for KindleRSS
+# 英文翻译文件 - 使用中文作为键名
+
+# 配置相关消息
+"✅ 使用环境变量配置（YAML格式）": "✅ Using environment variable configuration (YAML format)"
+"✅ 使用环境变量配置（JSON格式）": "✅ Using environment variable configuration (JSON format)"
+"⚠️ 环境变量配置格式错误，尝试使用文件配置": "⚠️ Environment variable configuration format error, trying file configuration"
+"✅ 使用配置文件: {file}": "✅ Using configuration file: {file}"
+"⚠️ 使用示例配置（请创建 config.yaml）": "⚠️ Using example configuration (please create config.yaml)"
+
+# EPUB生成消息
+"✅ EPUB 电子书已生成：{filename}": "✅ EPUB e-book generated: {filename}"
+"🔄 正在处理RSS源: {title}": "🔄 Processing RSS feed: {title}"
+"📄 获取文章: {title}": "📄 Fetching article: {title}"
+"🖼️ 处理图片中...": "🖼️ Processing images..."
+"⬇️ 下载图片: {url}": "⬇️ Downloading image: {url}"
+"⚠️ 图片下载失败: {url}": "⚠️ Image download failed: {url}"
+"⚠️ 图片过大，跳过: {url} ({size:.1f}MB)": "⚠️ Image too large, skipping: {url} ({size:.1f}MB)"
+"✅ 图片已处理: {count} 张": "✅ Images processed: {count} images"
+"⚠️ 内容提取失败，使用原始描述": "⚠️ Content extraction failed, using original description"
+"🔄 切换到 Readability 模式": "🔄 Switching to Readability mode"
+"  ✓ 成功嵌入 {count} 张图片": "  ✓ Successfully embedded {count} images"
+"  ✓ 已解析原始内容: {title}...": "  ✓ Parsed original content: {title}..."
+"  ✗ 无法解析原始内容，使用RSS摘要: {title}...": "  ✗ Unable to parse original content, using RSS summary: {title}..."
+"解析链接失败 {url}: {error}": "Link parsing failed {url}: {error}"
+
+# 邮件/Kindle推送消息
+"✅ 使用环境变量配置": "✅ Using environment variable configuration"
+"✅ 使用配置文件": "✅ Using configuration file"
+"❌ 配置文件 {file} 不存在，且环境变量未设置": "❌ Configuration file {file} does not exist and environment variables are not set"
+"❌ 配置文件缺少必要字段: {field}": "❌ Configuration file missing required field: {field}"
+"❌ 没有找到EPUB文件": "❌ No EPUB file found"
+"📚 找到最新EPUB文件: {file}": "📚 Latest EPUB file found: {file}"
+"   文件大小: {size:.2f} MB": "   File size: {size:.2f} MB"
+"⚠️  警告: 文件大小超过25MB，可能无法发送到Kindle": "⚠️ Warning: File size exceeds 25MB, may not be deliverable to Kindle"
+"📧 正在发送邮件到 {email}...": "📧 Sending email to {email}..."
+"✅ 邮件发送成功！": "✅ Email sent successfully!"
+"   请检查Kindle设备或邮箱确认接收": "   Please check your Kindle device or email to confirm receipt"
+"❌ 发送邮件失败: {error}": "❌ Email sending failed: {error}"
+"📚 使用指定文件: {file}": "📚 Using specified file: {file}"
+"❌ 指定的文件不存在: {file}": "❌ Specified file does not exist: {file}"
+
+# RSS和发送脚本消息
+"📖 开始生成EPUB...": "📖 Starting EPUB generation..."
+"✅ EPUB生成成功！": "✅ EPUB generation successful!"
+"❌ EPUB生成失败: {error}": "❌ EPUB generation failed: {error}"
+"📧 准备发送到Kindle...": "📧 Preparing to send to Kindle..."
+"⚠️  跳过邮件发送（配置文件未找到）": "⚠️ Skipping email sending (configuration file not found)"
+"   提示：创建 email_config.yaml 来启用邮件发送功能": "   Hint: Create email_config.yaml to enable email sending"
+"❌ 没有找到EPUB文件可以发送": "❌ No EPUB file found to send"
+"🎉 完成！EPUB已生成并发送到Kindle": "🎉 Complete! EPUB generated and sent to Kindle"
+"✅ EPUB生成完成（未发送邮件）": "✅ EPUB generation complete (email not sent)"
+"⚠️  EPUB已生成但邮件发送失败": "⚠️ EPUB generated but email sending failed"
+
+# 命令行描述
+"生成RSS EPUB并发送到Kindle": "Generate RSS EPUB and send to Kindle"
+"仅生成EPUB，不发送邮件": "Only generate EPUB, do not send email"
+"仅发送最新的EPUB，不生成新的": "Only send the latest EPUB, do not generate new one"
+"发送EPUB文件到Kindle邮箱": "Send EPUB file to Kindle email"
+"指定要发送的EPUB文件": "Specify the EPUB file to send"
+"指定配置文件": "Specify configuration file"
+
+# 分隔符
+"分隔符": "=================================================="
+
+# 其他消息
+"请创建配置文件或设置环境变量": "Please create configuration file or set environment variables"
+"请创建 email_config.yaml 文件，参考 email_config_example.yaml": "Please create email_config.yaml file, refer to email_config_example.yaml"
+"未找到配置文件或环境变量": "Configuration file or environment variables not found"

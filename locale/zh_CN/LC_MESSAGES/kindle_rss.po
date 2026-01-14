@@ -1,0 +1,204 @@
+# Chinese (Simplified) translation for KindleRSS
+# Copyright (C) 2024 KindleRSS
+# This file is distributed under the same license as the KindleRSS package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KindleRSS 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 12:00+0000\n"
+"PO-Revision-Date: 2024-01-01 12:00+0000\n"
+"Last-Translator: KindleRSS Team\n"
+"Language-Team: Chinese (Simplified)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# Configuration messages
+msgid "✅ 使用环境变量配置（YAML格式）"
+msgstr "✅ 使用环境变量配置（YAML格式）"
+
+msgid "✅ 使用环境变量配置（JSON格式）"
+msgstr "✅ 使用环境变量配置（JSON格式）"
+
+msgid "⚠️ 环境变量配置格式错误，尝试使用文件配置"
+msgstr "⚠️ 环境变量配置格式错误，尝试使用文件配置"
+
+#, python-format
+msgid "✅ 使用配置文件: %s"
+msgstr "✅ 使用配置文件: %s"
+
+msgid "⚠️ 使用示例配置（请创建 config.yaml）"
+msgstr "⚠️ 使用示例配置（请创建 config.yaml）"
+
+# EPUB generation messages
+#, python-format
+msgid "✅ EPUB 电子书已生成：%s"
+msgstr "✅ EPUB 电子书已生成：%s"
+
+#, python-format
+msgid "🔄 正在处理RSS源: %s"
+msgstr "🔄 正在处理RSS源: %s"
+
+#, python-format
+msgid "📄 获取文章: %s"
+msgstr "📄 获取文章: %s"
+
+msgid "🖼️ 处理图片中..."
+msgstr "🖼️ 处理图片中..."
+
+#, python-format
+msgid "⬇️ 下载图片: %s"
+msgstr "⬇️ 下载图片: %s"
+
+#, python-format
+msgid "⚠️ 图片下载失败: %s"
+msgstr "⚠️ 图片下载失败: %s"
+
+#, python-format
+msgid "⚠️ 图片过大，跳过: %s (%.1fMB)"
+msgstr "⚠️ 图片过大，跳过: %s (%.1fMB)"
+
+#, python-format
+msgid "✅ 图片已处理: %d 张"
+msgstr "✅ 图片已处理: %d 张"
+
+msgid "⚠️ 内容提取失败，使用原始描述"
+msgstr "⚠️ 内容提取失败，使用原始描述"
+
+msgid "🔄 切换到 Readability 模式"
+msgstr "🔄 切换到 Readability 模式"
+
+#, python-format
+msgid "  ✓ 成功嵌入 %d 张图片"
+msgstr "  ✓ 成功嵌入 %d 张图片"
+
+#, python-format
+msgid "  ✓ 已解析原始内容: %s..."
+msgstr "  ✓ 已解析原始内容: %s..."
+
+#, python-format
+msgid "  ✗ 无法解析原始内容，使用RSS摘要: %s..."
+msgstr "  ✗ 无法解析原始内容，使用RSS摘要: %s..."
+
+#, python-format
+msgid "解析链接失败 %s: %s"
+msgstr "解析链接失败 %s: %s"
+
+# Email/Kindle sending messages
+msgid "✅ 使用环境变量配置"
+msgstr "✅ 使用环境变量配置"
+
+msgid "✅ 使用配置文件"
+msgstr "✅ 使用配置文件"
+
+#, python-format
+msgid "❌ 配置文件 %s 不存在，且环境变量未设置"
+msgstr "❌ 配置文件 %s 不存在，且环境变量未设置"
+
+#, python-format
+msgid "❌ 配置文件缺少必要字段: %s"
+msgstr "❌ 配置文件缺少必要字段: %s"
+
+msgid "❌ 没有找到EPUB文件"
+msgstr "❌ 没有找到EPUB文件"
+
+#, python-format
+msgid "📚 找到最新EPUB文件: %s"
+msgstr "📚 找到最新EPUB文件: %s"
+
+#, python-format
+msgid "   文件大小: %.2f MB"
+msgstr "   文件大小: %.2f MB"
+
+msgid "⚠️ 警告: 文件大小超过25MB，可能无法发送到Kindle"
+msgstr "⚠️ 警告: 文件大小超过25MB，可能无法发送到Kindle"
+
+#, python-format
+msgid "📧 正在发送邮件到 %s..."
+msgstr "📧 正在发送邮件到 %s..."
+
+msgid "✅ 邮件发送成功！"
+msgstr "✅ 邮件发送成功！"
+
+msgid "   请检查Kindle设备或邮箱确认接收"
+msgstr "   请检查Kindle设备或邮箱确认接收"
+
+#, python-format
+msgid "❌ 发送邮件失败: %s"
+msgstr "❌ 发送邮件失败: %s"
+
+#, python-format
+msgid "📚 使用指定文件: %s"
+msgstr "📚 使用指定文件: %s"
+
+#, python-format
+msgid "❌ 指定的文件不存在: %s"
+msgstr "❌ 指定的文件不存在: %s"
+
+# RSS and send script messages
+msgid "📖 开始生成EPUB..."
+msgstr "📖 开始生成EPUB..."
+
+msgid "✅ EPUB生成成功！"
+msgstr "✅ EPUB生成成功！"
+
+#, python-format
+msgid "❌ EPUB生成失败: %s"
+msgstr "❌ EPUB生成失败: %s"
+
+msgid "📧 准备发送到Kindle..."
+msgstr "📧 准备发送到Kindle..."
+
+msgid "⚠️ 跳过邮件发送（配置文件未找到）"
+msgstr "⚠️ 跳过邮件发送（配置文件未找到）"
+
+msgid "   提示：创建 email_config.yaml 来启用邮件发送功能"
+msgstr "   提示：创建 email_config.yaml 来启用邮件发送功能"
+
+msgid "❌ 没有找到EPUB文件可以发送"
+msgstr "❌ 没有找到EPUB文件可以发送"
+
+msgid "🎉 完成！EPUB已生成并发送到Kindle"
+msgstr "🎉 完成！EPUB已生成并发送到Kindle"
+
+msgid "✅ EPUB生成完成（未发送邮件）"
+msgstr "✅ EPUB生成完成（未发送邮件）"
+
+msgid "⚠️ EPUB已生成但邮件发送失败"
+msgstr "⚠️ EPUB已生成但邮件发送失败"
+
+# Command line descriptions
+msgid "生成RSS EPUB并发送到Kindle"
+msgstr "生成RSS EPUB并发送到Kindle"
+
+msgid "仅生成EPUB，不发送邮件"
+msgstr "仅生成EPUB，不发送邮件"
+
+msgid "仅发送最新的EPUB，不生成新的"
+msgstr "仅发送最新的EPUB，不生成新的"
+
+msgid "发送EPUB文件到Kindle邮箱"
+msgstr "发送EPUB文件到Kindle邮箱"
+
+msgid "指定要发送的EPUB文件"
+msgstr "指定要发送的EPUB文件"
+
+msgid "指定配置文件"
+msgstr "指定配置文件"
+
+# Separator
+msgid "分隔符"
+msgstr "=================================================="
+
+# Other messages
+msgid "请创建配置文件或设置环境变量"
+msgstr "请创建配置文件或设置环境变量"
+
+msgid "请创建 email_config.yaml 文件，参考 email_config_example.yaml"
+msgstr "请创建 email_config.yaml 文件，参考 email_config_example.yaml"
+
+msgid "未找到配置文件或环境变量"
+msgstr "未找到配置文件或环境变量"

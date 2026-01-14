@@ -15,6 +15,8 @@ from ebooklib import epub
 from PIL import Image
 from readability import Document
 
+from i18n_utils import _
+
 # 禁用 SSL 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -28,33 +30,33 @@ def load_config():
         try:
             # 尝试作为YAML解析
             config = yaml.safe_load(env_config)
-            print("✅ 使用环境变量配置（YAML格式）")
+            print(_("✅ 使用环境变量配置（YAML格式）"))
             return config
         except yaml.YAMLError:
             try:
                 # 尝试作为JSON解析
                 config = json.loads(env_config)
-                print("✅ 使用环境变量配置（JSON格式）")
+                print(_("✅ 使用环境变量配置（JSON格式）"))
                 return config
             except json.JSONDecodeError:
-                print("⚠️ 环境变量配置格式错误，尝试使用文件配置")
+                print(_("⚠️ 环境变量配置格式错误，尝试使用文件配置"))
 
     # 从文件读取配置
     config_file = os.environ.get("CONFIG_FILE", "config.yaml")
     if os.path.exists(config_file):
         with open(config_file, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
-        print(f"✅ 使用配置文件: {config_file}")
+        print(_("✅ 使用配置文件: %s") % config_file)
         return config
 
     # 使用示例配置
     if os.path.exists("config.example.yaml"):
         with open("config.example.yaml", "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
-        print("⚠️ 使用示例配置文件")
+        print(_("⚠️ 使用示例配置（请创建 config.yaml）"))
         return config
 
-    raise FileNotFoundError("未找到配置文件或环境变量")
+    raise FileNotFoundError(_("未找到配置文件或环境变量"))
 
 
 def fetch_feed(url):
@@ -156,7 +158,7 @@ def resolve_link_content(url, config=None):
         return doc.summary()
 
     except Exception as e:
-        print(f"解析链接失败 {url}: {e}")
+        print(_("解析链接失败 %s: %s") % (url, e))
         return None
 
 
@@ -267,7 +269,7 @@ def process_content_images(content, load_images=True):
             pass
 
     if embedded_images:
-        print(f"  ✓ 成功嵌入 {len(embedded_images)} 张图片")
+        print(_("  ✓ 成功嵌入 %d 张图片") % len(embedded_images))
 
     return content
 
@@ -588,9 +590,11 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=
                 if resolved_content:
                     # 成功解析，使用解析后的内容
                     raw_content = resolved_content
-                    print(f"  ✓ 已解析原始内容: {entry.title[:30]}...")
+                    print(_("  ✓ 已解析原始内容: %s...") % entry.title[:30])
                 else:
-                    print(f"  ✗ 无法解析原始内容，使用RSS摘要: {entry.title[:30]}...")
+                    print(
+                        _("  ✗ 无法解析原始内容，使用RSS摘要: %s...") % entry.title[:30]
+                    )
 
             # 处理内容中的图片
             processed_content = raw_content
@@ -806,7 +810,7 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=
 
     # 输出 EPUB
     epub.write_epub(filename, book, {})
-    print(f"✅ EPUB 电子书已生成：{filename}")
+    print(_("✅ EPUB 电子书已生成：%s") % filename)
 
 
 def main():

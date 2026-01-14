@@ -12,6 +12,7 @@ Convert RSS feeds to EPUB e-books and automatically send them to your Kindle dev
 - 🤖 **GitHub Actions** - Fully automated scheduled generation and delivery
 - 📖 **Smart Navigation** - Multi-level table of contents for easy reading navigation
 - 🔄 **OPML Converter** - Online tool to convert OPML files to project configuration format
+- 🌍 **Multi-language Support** - Supports Chinese and English interface, switchable via environment variables
 
 ## 🚀 Quick Start
 
@@ -144,6 +145,18 @@ Supported email services:
 
 ## 🛠️ Advanced Features
 
+### Multi-language Support
+
+Supports Chinese and English interface, controlled by environment variables:
+
+```bash
+# Use Chinese interface
+KINDLE_RSS_LANG=zh python main.py
+
+# Use English interface
+KINDLE_RSS_LANG=en python main.py
+```
+
 ### Full-Text Extraction Modes
 
 1. **Readability Mode** - Automatically identify article body
@@ -185,8 +198,8 @@ Set up local scheduled tasks using crontab:
 
 ## 📖 Documentation
 
-- [Kindle Push Setup](KINDLE_SETUP.md)
-- [GitHub Actions Setup](GITHUB_ACTIONS_SETUP.md)
+- [Kindle Push Setup](KINDLE_SETUP_EN.md)
+- [GitHub Actions Setup](GITHUB_ACTIONS_SETUP_EN.md)
 - [Configuration Example](config.example.yaml)
 
 ## 📄 License
