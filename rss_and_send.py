@@ -31,12 +31,8 @@ def main():
         print(_("分隔符"))
         print(_("📖 开始生成EPUB..."))
         print(_("分隔符"))
-        try:
-            generate_epub()
-            print(_("✅ EPUB生成成功！"))
-        except Exception as e:
-            print(_("❌ EPUB生成失败: %s") % e)
-            return 1
+        generate_epub()
+        print(_("✅ EPUB生成成功！"))
 
     if not args.no_send:
         # 发送到Kindle
