@@ -1,0 +1,47 @@
+name: RSS to Kindle
+description: Download RSS feeds, convert them to EPUB, and send to Kindle
+
+inputs:
+  config-path:
+    description: Path to config.yaml in the user repository
+    required: false
+    default: "config.yaml"
+
+runs:
+  using: composite
+  steps:
+    # Checkout the USER repo (where config.yaml lives)
+    - name: Checkout user repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles(format('{0}/requirements.txt', github.action_path)) }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r "${GITHUB_ACTION_PATH}/requirements.txt"
+
+    - name: Generate EPUB and send to Kindle
+      shell: bash
+      env:
+        SMTP_SERVER: ${{ env.SMTP_SERVER }}
+        SMTP_PORT: ${{ env.SMTP_PORT }}
+        SENDER_EMAIL: ${{ env.SENDER_EMAIL }}
+        SENDER_PASSWORD: ${{ env.SENDER_PASSWORD }}
+        KINDLE_EMAIL: ${{ env.KINDLE_EMAIL }}
+      run: |
+        python "${GITHUB_ACTION_PATH}/rss_and_send.py" \
+          --config "${{ inputs.config-path }}"
+
