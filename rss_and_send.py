@@ -11,12 +11,11 @@ from datetime import datetime
 from i18n_utils import _
 
 # 导入主程序和发送模块
-from main import main as generate_epub
+from main import generate_epub
 from send_to_kindle import get_latest_epub, load_email_config, send_to_kindle
 
 
-def main():
-    """主函数：生成并发送"""
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=_("生成RSS EPUB并发送到Kindle"))
     parser.add_argument(
         "--no-send", action="store_true", help=_("仅生成EPUB，不发送邮件")
@@ -24,14 +23,19 @@ def main():
     parser.add_argument(
         "--send-only", action="store_true", help=_("仅发送最新的EPUB，不生成新的")
     )
-    args = parser.parse_args()
+    parser.add_argument("--config", default="config.yaml")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
 
     if not args.send_only:
         # 生成EPUB
         print(_("分隔符"))
         print(_("📖 开始生成EPUB..."))
         print(_("分隔符"))
-        generate_epub()
+        generate_epub(args.config)
         print(_("✅ EPUB生成成功！"))
 
     if not args.no_send:

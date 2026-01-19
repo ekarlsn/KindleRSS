@@ -1,3 +1,4 @@
+import argparse
 import base64
 import io
 import json
@@ -21,7 +22,7 @@ from i18n_utils import _
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-def load_config():
+def load_config(file_path: str):
     """读取配置（优先从环境变量，其次从文件）"""
 
     # 优先从环境变量读取完整配置（支持GitHub Variables）
@@ -42,18 +43,11 @@ def load_config():
                 print(_("⚠️ 环境变量配置格式错误，尝试使用文件配置"))
 
     # 从文件读取配置
-    config_file = os.environ.get("CONFIG_FILE", "config.yaml")
+    config_file = os.environ.get("CONFIG_FILE", file_path)
     if os.path.exists(config_file):
         with open(config_file, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
         print(_("✅ 使用配置文件: %s") % config_file)
-        return config
-
-    # 使用示例配置
-    if os.path.exists("config.example.yaml"):
-        with open("config.example.yaml", "r", encoding="utf-8") as f:
-            config = yaml.safe_load(f)
-        print(_("⚠️ 使用示例配置（请创建 config.yaml）"))
         return config
 
     raise FileNotFoundError(_("未找到配置文件或环境变量"))
@@ -813,8 +807,19 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=
     print(_("✅ EPUB 电子书已生成：%s") % filename)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="config.yaml")
+    return parser.parse_args()
+
+
 def main():
-    config = load_config()
+    args = parse_args()
+    generate_epub(args.config)
+
+
+def generate_epub(config_path: str):
+    config = load_config(config_path)
     all_feeds = {}
     feeds_config = {}  # 存储每个feed的配置
 
