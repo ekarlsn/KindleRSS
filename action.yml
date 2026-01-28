@@ -50,5 +50,5 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: rss-epub
-        path: rss_feed_*.epub
+        path: RSS_Digest_*.epub
         retention-days: 30
