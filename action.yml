@@ -45,3 +45,10 @@ runs:
         python "${GITHUB_ACTION_PATH}/rss_and_send.py" \
           --config "${{ inputs.config-path }}"
 
+    - name: Upload EPUB artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: rss-epub
+        path: rss_feed_*.epub
+        retention-days: 30
