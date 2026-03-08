@@ -1,33 +1,33 @@
-# GitHub Actions 自动推送设置指南
+# GitHub Actions Automated Push Setup Guide
 
-## 概述
-使用 GitHub Actions 自动生成 RSS EPUB 并发送到 Kindle，所有敏感信息都通过 GitHub Secrets 管理。
+## Overview
+Use GitHub Actions to automatically generate RSS EPUB and send to Kindle, with all sensitive information managed through GitHub Secrets.
 
-## 设置步骤
+## Setup Steps
 
-### 1. Fork 或上传代码到 GitHub
+### 1. Fork or Upload Code to GitHub
 
-确保你的仓库包含以下文件：
-- `main.py` - RSS 转 EPUB 主程序
-- `send_to_kindle.py` - 邮件发送程序
-- `rss_and_send.py` - 组合脚本
-- `config.yaml` - RSS 源配置
-- `.github/workflows/rss_to_kindle.yml` - GitHub Actions 工作流
-- `requirements.txt` - Python 依赖
+Ensure your repository contains the following files:
+- `main.py` - RSS to EPUB main program
+- `send_to_kindle.py` - Email sending program
+- `rss_and_send.py` - Combined script
+- `config.yaml` - RSS source configuration
+- `.github/workflows/rss_to_kindle.yml` - GitHub Actions workflow
+- `requirements.txt` - Python dependencies
 
-### 2. 配置 GitHub Secrets 和 Variables
+### 2. Configure GitHub Secrets and Variables
 
-#### 配置方式一：使用 Repository Variables（推荐）
+#### Method 1: Using Repository Variables (Recommended)
 
-在你的 GitHub 仓库中设置 Variables：
+Set Variables in your GitHub repository:
 
-1. 进入仓库页面
-2. 点击 `Settings` → `Secrets and variables` → `Actions`
-3. 选择 `Variables` 标签
-4. 点击 `New repository variable`
-5. 添加 `CONFIG_YAML` 变量，内容为完整的 config.yaml 配置
+1. Go to your repository page
+2. Click `Settings` → `Secrets and variables` → `Actions`
+3. Select the `Variables` tab
+4. Click `New repository variable`
+5. Add `CONFIG_YAML` variable with complete config.yaml content
 
-**CONFIG_YAML 示例内容：**
+**CONFIG_YAML Example Content:**
 ```yaml
 Settings:
   max_history: 7
@@ -35,154 +35,213 @@ Settings:
 
 Feeds:
   - url: "https://sspai.com/feed"
-    name: "少数派"
-    title: "少数派精选"
+    name: "SSPAI"
+    title: "SSPAI Selected"
     enabled: true
     resolve_link:
       enabled: true
       method: "readability"
 ```
 
-#### 配置方式二：使用 Secrets（用于私密RSS源）
+#### Method 2: Using Secrets (for private RSS sources)
 
-如果你的RSS源包含私密信息，使用 Secrets：
+If your RSS sources contain private information, use Secrets:
 
-1. 选择 `Secrets` 标签
-2. 点击 `New repository secret`
-3. 添加 `CONFIG_YAML` Secret，内容同上
+1. Select the `Secrets` tab
+2. Click `New repository secret`
+3. Add `RSS_CONFIG` secret with complete config.yaml content
 
-#### 邮件配置 Secrets
+### 3. Configure Email Secrets
 
-添加以下 Secrets 用于邮件发送：
+Add the following Secrets (required):
 
-| Secret 名称 | 说明 | 示例值 |
-|------------|------|--------|
-| `SMTP_SERVER` | SMTP 服务器地址 | `smtp.gmail.com` |
-| `SMTP_PORT` | SMTP 端口 | `587` |
-| `SENDER_EMAIL` | 发件人邮箱 | `your_email@gmail.com` |
-| `SENDER_PASSWORD` | 邮箱密码/授权码 | `your_app_password` |
-| `KINDLE_EMAIL` | Kindle 接收邮箱 | `your_kindle@kindle.com` |
+- `SMTP_SERVER` - SMTP server address
+- `SMTP_PORT` - SMTP port (587/465/25)
+- `SENDER_EMAIL` - Sender email address
+- `SENDER_PASSWORD` - Email password or app-specific password
+- `KINDLE_EMAIL` - Kindle receiving email address
 
-### 3. 各邮箱服务商配置
+Optional Secrets:
+- `EMAIL_SUBJECT` - Custom email subject (default: "RSS Feed")
+- `EMAIL_BODY` - Custom email body
 
-#### Gmail
-- **SMTP_SERVER**: `smtp.gmail.com`
-- **SMTP_PORT**: `587`
-- **SENDER_PASSWORD**: 需要生成应用专用密码
-  1. 开启两步验证
-  2. 访问 https://myaccount.google.com/apppasswords
-  3. 生成应用专用密码
+**Common SMTP Settings:**
 
-#### QQ 邮箱
-- **SMTP_SERVER**: `smtp.qq.com`
-- **SMTP_PORT**: `587`
-- **SENDER_PASSWORD**: 使用授权码（不是QQ密码）
-  1. 登录 QQ 邮箱
-  2. 设置 → 账户 → POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV服务
-  3. 生成授权码
+| Email Provider | SMTP Server | Port | Security |
+|---|---|---|---|
+| Gmail | smtp.gmail.com | 587 | STARTTLS |
+| Outlook | smtp-mail.outlook.com | 587 | STARTTLS |
+| QQ Mail | smtp.qq.com | 587 | STARTTLS |
+| 163 Mail | smtp.163.com | 465 | SSL |
 
-#### 163 邮箱
-- **SMTP_SERVER**: `smtp.163.com`
-- **SMTP_PORT**: `465`
-- **SENDER_PASSWORD**: 使用授权码
-  1. 登录 163 邮箱
-  2. 设置 → POP3/SMTP/IMAP
-  3. 开启服务并获取授权码
+### 4. Configure Kindle Whitelist
 
-#### Outlook
-- **SMTP_SERVER**: `smtp-mail.outlook.com`
-- **SMTP_PORT**: `587`
-- **SENDER_PASSWORD**: 使用邮箱密码或应用密码
+**Important**: Add your sender email to Kindle's approved sender list:
 
-### 4. 配置 Kindle 白名单
+1. Visit [Amazon Manage Your Content and Devices](https://www.amazon.com/mn/dcw/myx.html)
+2. Go to `Preferences` → `Personal Document Settings`
+3. Find "Approved Personal Document E-mail List"
+4. Click "Add a new approved e-mail address"
+5. Enter your sender email address
 
-**重要**：必须将发件邮箱添加到 Kindle 白名单
+### 5. Workflow Configuration
 
-1. 登录亚马逊账户
-2. 进入 **管理我的内容和设备**
-3. 点击 **首选项** 标签
-4. 找到 **个人文档设置**
-5. 在 **已认可的发件人电子邮箱列表** 中添加你的 `SENDER_EMAIL`
+The repository includes three workflow files:
 
-### 5. 调整定时任务（可选）
+#### Basic Workflow (`rss_to_kindle.yml`)
+- Runs daily at 7 AM Beijing time
+- Generates EPUB and sends to Kindle
+- Suitable for most users
 
-编辑 `.github/workflows/rss_to_kindle.yml` 中的 cron 表达式：
+#### Advanced Workflow (`rss_to_kindle_advanced.yml`)
+- Supports manual triggers with custom parameters
+- Can create GitHub Releases
+- Configurable schedule
+
+#### Test Workflow (`test.yml`)
+- Runs on code pushes
+- Tests EPUB generation only
+- No email sending
+
+### 6. Manual Trigger
+
+To manually run the workflow:
+
+1. Go to your repository
+2. Click `Actions` tab
+3. Select `RSS to Kindle` workflow
+4. Click `Run workflow`
+5. Fill in parameters (if using advanced workflow)
+6. Click `Run workflow`
+
+## Configuration Examples
+
+### Complete Variable Configuration
+
+```yaml
+# CONFIG_YAML Variable Content
+Settings:
+  max_history: 7
+  load_images: true
+  filename_template: "RSS_Digest_{date}.epub"
+
+Feeds:
+  - url: "https://feeds.feedburner.com/oreilly/radar"
+    name: "O'Reilly Radar"
+    title: "O'Reilly Radar"
+    enabled: true
+    resolve_link:
+      enabled: true
+      method: "readability"
+      fallback: "readability"
+
+  - url: "https://www.ruanyifeng.com/blog/atom.xml"
+    name: "Ruan Yifeng's Blog"
+    title: "Ruan Yifeng's Network Log"
+    enabled: true
+    resolve_link:
+      enabled: true
+      method: "selector"
+      selectors:
+        content: "article .asset-content"
+        remove: ".asset-meta, .asset-footer"
+      fallback: "readability"
+```
+
+### Email Configuration (Secrets)
+
+For Gmail (requires app-specific password):
+- `SMTP_SERVER`: `smtp.gmail.com`
+- `SMTP_PORT`: `587`
+- `SENDER_EMAIL`: `your-email@gmail.com`
+- `SENDER_PASSWORD`: `your-app-password`
+- `KINDLE_EMAIL`: `your-kindle@kindle.com`
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Workflow fails with "Config not found"**
+   - Check if `CONFIG_YAML` or `RSS_CONFIG` variable is set
+   - Verify YAML syntax is correct
+
+2. **Email sending fails**
+   - Verify all email Secrets are set correctly
+   - Check if sender email is whitelisted in Kindle
+   - For Gmail, ensure you're using app-specific password
+
+3. **Kindle not receiving files**
+   - Confirm sender email is in Kindle's approved list
+   - Check if EPUB file size is under 25MB
+   - Verify Kindle email address is correct
+
+4. **Workflow doesn't run on schedule**
+   - GitHub Actions may have delays
+   - Try manually triggering the workflow
+   - Check if repository has recent activity
+
+### Debugging Steps
+
+1. **Check Workflow Logs**
+   - Go to Actions tab
+   - Click on failed workflow run
+   - Review job logs for error messages
+
+2. **Test Configuration**
+   - Use the test workflow to verify EPUB generation
+   - Manually trigger workflow to test email sending
+
+3. **Verify Secrets**
+   - Ensure all required Secrets are set
+   - Check for typos in Secret names
+   - Verify Secret values are correct
+
+## Advanced Features
+
+### Custom Scheduling
+
+Edit the workflow file to change schedule:
 
 ```yaml
 on:
   schedule:
-    - cron: '0 23 * * *'  # UTC 时间，相当于北京时间早上 7 点
+    - cron: '0 23 * * *'  # Run at 11 PM UTC daily
+  workflow_dispatch:
 ```
 
-常用时间设置：
-- `0 23 * * *` - 每天北京时间早上 7 点
-- `0 11 * * *` - 每天北京时间晚上 7 点
-- `0 1 * * 1,3,5` - 每周一三五北京时间早上 9 点
-- `0 14 * * 0` - 每周日北京时间晚上 10 点
+### Multiple Kindle Devices
 
-### 6. 手动触发测试
+To send to multiple Kindle devices, modify the workflow to run multiple times with different email addresses, or set up separate workflows.
 
-1. 进入仓库的 `Actions` 标签
-2. 选择 `RSS to Kindle` 工作流
-3. 点击 `Run workflow` → `Run workflow`
-4. 查看运行日志确认是否成功
+### Release Creation
 
-## 功能特性
+The advanced workflow can create GitHub Releases with the generated EPUB:
 
-- ✅ 自动定时运行（每天早上 7 点）
-- ✅ 支持手动触发
-- ✅ 所有敏感信息通过 Secrets 管理
-- ✅ 自动缓存依赖加快运行速度
-- ✅ 保留 EPUB 备份（7 天）
-- ✅ 自动清理旧文件
-
-## 查看运行结果
-
-### 查看运行日志
-1. 进入 `Actions` 标签
-2. 点击具体的运行记录
-3. 查看各步骤的详细日志
-
-### 下载 EPUB 备份
-1. 进入具体的运行记录
-2. 在页面底部找到 `Artifacts`
-3. 下载 `rss-epub-xxx` 文件
-
-## 故障排查
-
-### Action 运行失败
-- 检查 Secrets 是否正确配置
-- 查看具体的错误日志
-- 确认 RSS 源可以正常访问
-
-### 邮件发送失败
-- 确认 SMTP 设置正确
-- 检查邮箱是否需要应用专用密码
-- 验证 Kindle 邮箱地址是否正确
-
-### Kindle 未收到邮件
-- 确认已添加发件邮箱到白名单
-- 检查文件大小是否超过 25MB
-- 查看垃圾邮件文件夹
-
-## 本地测试
-
-使用环境变量在本地测试：
-
-```bash
-export SMTP_SERVER="smtp.gmail.com"
-export SMTP_PORT="587"
-export SENDER_EMAIL="your_email@gmail.com"
-export SENDER_PASSWORD="your_password"
-export KINDLE_EMAIL="your_kindle@kindle.com"
-
-python rss_and_send.py
+```yaml
+- name: Create Release
+  uses: softprops/action-gh-release@v1
+  with:
+    files: "*.epub"
+    tag_name: "rss-${{ steps.date.outputs.date }}"
 ```
 
-## 安全建议
+## Security Notes
 
-1. **不要**在代码中硬编码任何密码
-2. **不要**将 `email_config.yaml` 提交到仓库
-3. 定期更新邮箱密码/授权码
-4. 仅给仓库必要的权限
-5. 如果是私有仓库，确保只有信任的人有访问权限
+- Never commit sensitive information to the repository
+- Use Secrets for all passwords and private information
+- Variables are visible to repository collaborators; use Secrets for sensitive data
+- Regularly rotate passwords and app-specific passwords
+
+## Support
+
+If you encounter issues:
+
+1. Check the [Issues](https://github.com/ZRui-C/KindleRSS/issues) page
+2. Review workflow logs for specific error messages
+3. Ensure all configuration steps are completed
+4. Test locally first to isolate GitHub Actions issues
+
+For questions about specific email providers or Kindle setup, refer to:
+- [Kindle Setup Guide](KINDLE_SETUP.md)
+- Email provider's SMTP documentation
+- GitHub Actions documentation

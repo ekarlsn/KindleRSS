@@ -1,209 +1,207 @@
 # KindleRSS
-[![Static Badge](https://img.shields.io/badge/Readme-EN-blue)](README_EN.md)
 
+Convert RSS feeds to EPUB e-books and automatically send them to your Kindle device. Supports full-text extraction, image embedding, and GitHub Actions automation.
 
-将RSS订阅转换为EPUB电子书，并自动发送到Kindle设备。支持全文提取、图片嵌入、GitHub Actions自动化推送。
+## ✨ Features
 
-## ✨ 功能特性
+- 📚 **RSS to EPUB** - Merge multiple RSS feeds into a beautifully formatted EPUB e-book
+- 🔍 **Full-Text Extraction** - Extract complete article content from web pages (CSS selectors/Readability)
+- 🖼️ **Image Processing** - Automatically download and embed article images with anti-page-break display
+- 📧 **Kindle Push** - Auto-send to Kindle email
+- 🤖 **GitHub Actions** - Fully automated scheduled generation and delivery
+- 📖 **Smart Navigation** - Multi-level table of contents for easy reading navigation
+- 🔄 **OPML Converter** - Online tool to convert OPML files to project configuration format
 
-- 📚 **RSS转EPUB** - 将多个RSS源合并为一本精美的EPUB电子书
-- 🔍 **全文提取** - 支持从原网页提取完整文章内容（CSS选择器/Readability）
-- 🖼️ **图片处理** - 自动下载并嵌入文章图片，支持防跨页显示
-- 📧 **Kindle推送** - 自动发送到Kindle邮箱
-- 🤖 **GitHub Actions** - 全自动定时生成和推送
-- 📖 **智能导航** - 多级目录结构，方便阅读导航
-- 🔄 **OPML转换器** - 在线工具可将OPML文件转换为项目配置格式
+## 🚀 Quick Start
 
-## 🚀 快速开始
+### Local Usage
 
-### 本地使用
-
-1. **克隆仓库**
+1. **Clone Repository**
 ```bash
 git clone https://github.com/ZRui-C/KindleRSS.git
 cd KindleRSS
 ```
 
-2. **安装依赖**
+2. **Install Dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **配置RSS源**
+3. **Configure RSS Sources**
 ```bash
 cp config.example.yaml config.yaml
-# 编辑 config.yaml，添加你的RSS源
+# Edit config.yaml to add your RSS sources
 ```
 
-4. **生成EPUB**
+4. **Generate EPUB**
 ```bash
 python main.py
 ```
 
-5. **发送到Kindle**（可选）
+5. **Send to Kindle** (Optional)
 ```bash
-# 配置邮件设置
+# Configure email settings
 cp email_config.example.yaml email_config.yaml
-# 编辑 email_config.yaml
+# Edit email_config.yaml
 
-# 发送最新的EPUB
+# Send the latest EPUB
 python send_to_kindle.py
 
-# 或生成并发送
+# Or generate and send
 python rss_and_send.py
 ```
 
-### GitHub Actions 自动化
+### GitHub Actions Automation
 
-1. **Fork本仓库**
+1. **Fork this repository**
 
-2. **配置GitHub Variables/Secrets**
-   
-   在仓库设置中配置：
-   
-   **RSS配置** (Variables或Secrets)：
-   - `CONFIG_YAML` - 完整的config.yaml内容
-   
-   **邮件配置** (Secrets)：
-   - `SMTP_SERVER` - SMTP服务器地址
-   - `SMTP_PORT` - SMTP端口
-   - `SENDER_EMAIL` - 发件人邮箱
-   - `SENDER_PASSWORD` - 邮箱密码/授权码
-   - `KINDLE_EMAIL` - Kindle接收邮箱
+2. **Configure GitHub Variables/Secrets**
 
-3. **配置Kindle白名单**
-   
-   将发件邮箱添加到Kindle的认可发件人列表
+   In repository settings, configure:
 
-4. **自动运行**
-   
-   - 每天北京时间早上7点自动推送
-   - 或手动触发：Actions → RSS to Kindle → Run workflow
+   **RSS Configuration** (Variables or Secrets):
+   - `CONFIG_YAML` - Complete config.yaml content
 
-详细设置见 [GITHUB_ACTIONS_SETUP.md](GITHUB_ACTIONS_SETUP.md)
+   **Email Configuration** (Secrets):
+   - `SMTP_SERVER` - SMTP server address
+   - `SMTP_PORT` - SMTP port
+   - `SENDER_EMAIL` - Sender email
+   - `SENDER_PASSWORD` - Email password/app password
+   - `KINDLE_EMAIL` - Kindle receiving email
 
-## 🔄 OPML转换器
+3. **Configure Kindle Whitelist**
 
-访问 [在线OPML转换器](https://kindle.hluvmiku.tech/converter.html) 可以轻松将OPML文件转换为config.yaml格式：
+   Add sender email to Kindle's approved sender list
 
-1. 从RSS阅读器导出OPML文件
-2. 上传到转换器页面
-3. 自动生成config.yaml配置
-4. 一键复制或下载配置文件
+4. **Automatic Execution**
 
-## 📝 配置说明
+   - Automatic push daily at 7 AM Beijing time
+   - Or trigger manually: Actions → RSS to Kindle → Run workflow
 
-### RSS源配置 (config.yaml)
+See [GITHUB_ACTIONS_SETUP.md](GITHUB_ACTIONS_SETUP.md) for detailed setup
+
+## 🔄 OPML Converter
+
+Visit the [Online OPML Converter](https://kindle.hluvmiku.tech/en/converter.html) to easily convert OPML files to config.yaml format:
+
+1. Export OPML file from your RSS reader
+2. Upload to the converter page
+3. Automatically generate config.yaml configuration
+4. Copy or download the configuration file with one click
+
+## 📝 Configuration
+
+### RSS Source Configuration (config.yaml)
 
 ```yaml
 Settings:
-  max_history: 7  # 保留最近N天的文章
-  load_images: true  # 是否下载图片
+  max_history: 7  # Keep articles from the last N days
+  load_images: true  # Whether to download images
 
 Feeds:
   - url: "https://example.com/rss"
-    name: "示例源"
-    title: "示例标题"
+    name: "Example Feed"
+    title: "Example Title"
     enabled: true
-    resolve_link:  # 可选：提取全文
+    resolve_link:  # Optional: extract full text
       enabled: true
-      method: "readability"  # 或 "selector"
-      selectors:  # method为selector时使用
+      method: "readability"  # or "selector"
+      selectors:  # Used when method is selector
         content: "article, .content"
         remove: ".ads, .comments"
       fallback: "readability"
 ```
 
-### 邮件配置 (email_config.yaml)
+### Email Configuration (email_config.yaml)
 
-参考 `email_config.example.yaml` 配置你的SMTP服务器信息。
+Refer to `email_config.example.yaml` to configure your SMTP server information.
 
-支持的邮箱服务：
-- Gmail（需要应用专用密码）
-- QQ邮箱（需要授权码）
-- 163邮箱（需要授权码）
+Supported email services:
+- Gmail (requires app-specific password)
+- QQ Mail (requires authorization code)
+- 163 Mail (requires authorization code)
 - Outlook
-- 其他SMTP服务器
+- Other SMTP servers
 
-## 📂 项目结构
+## 📂 Project Structure
 
 ```
 .
-├── main.py                 # 主程序：RSS转EPUB
-├── send_to_kindle.py       # Kindle邮件发送
-├── rss_and_send.py        # 组合脚本
-├── config.yaml            # RSS源配置
-├── email_config.yaml      # 邮件配置（需创建）
-├── requirements.txt       # Python依赖
+├── main.py                 # Main program: RSS to EPUB
+├── send_to_kindle.py       # Kindle email sender
+├── rss_and_send.py        # Combined script
+├── config.yaml            # RSS source configuration
+├── email_config.yaml      # Email configuration (to be created)
+├── requirements.txt       # Python dependencies
 ├── .github/
 │   └── workflows/
-│       ├── rss_to_kindle.yml      # 基础工作流
-│       ├── rss_to_kindle_advanced.yml  # 高级工作流
-│       └── test.yml               # 测试工作流
-└── README.md              # 本文档
+│       ├── rss_to_kindle.yml      # Basic workflow
+│       ├── rss_to_kindle_advanced.yml  # Advanced workflow
+│       └── test.yml               # Test workflow
+└── README.md              # This document
 ```
 
-## 🛠️ 高级功能
+## 🛠️ Advanced Features
 
-### 全文提取模式
+### Full-Text Extraction Modes
 
-1. **Readability模式** - 自动识别文章主体
-2. **CSS选择器模式** - 精确指定内容区域
-3. **混合模式** - 选择器失败时自动切换到Readability
+1. **Readability Mode** - Automatically identify article body
+2. **CSS Selector Mode** - Precisely specify content areas
+3. **Hybrid Mode** - Automatically switch to Readability when selector fails
 
-### 定时任务
+### Scheduled Tasks
 
-使用crontab设置本地定时任务：
+Set up local scheduled tasks using crontab:
 ```bash
-# 每天早上7点运行
+# Run daily at 7 AM
 0 7 * * * cd /path/to/rss-to-epub && python3 rss_and_send.py
 ```
 
-### GitHub Actions工作流
+### GitHub Actions Workflows
 
-- **基础版** - 每日自动推送
-- **高级版** - 支持Release发布、自定义时间
-- **测试版** - 代码提交时自动测试
+- **Basic Version** - Daily automatic push
+- **Advanced Version** - Supports Release publishing, custom timing
+- **Test Version** - Automatic testing on code commits
 
-## 🔧 故障排查
+## 🔧 Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **Kindle未收到邮件**
-   - 检查是否添加发件邮箱到白名单
-   - 确认文件大小未超过25MB
-   - 查看垃圾邮件文件夹
+1. **Kindle not receiving emails**
+   - Check if sender email is whitelisted
+   - Confirm file size is under 25MB
+   - Check spam folder
 
-2. **邮件发送失败**
-   - 验证SMTP设置
-   - 确认使用应用专用密码/授权码
-   - 检查网络连接
+2. **Email sending failure**
+   - Verify SMTP settings
+   - Confirm using app-specific password/authorization code
+   - Check network connection
 
-3. **RSS解析失败**
-   - 确认RSS源URL正确
-   - 检查网络是否可访问
-   - 查看是否需要代理
+3. **RSS parsing failure**
+   - Confirm RSS source URL is correct
+   - Check network accessibility
+   - See if proxy is needed
 
-## 📖 文档
+## 📖 Documentation
 
-- [Kindle推送设置](KINDLE_SETUP.md)
-- [GitHub Actions设置](GITHUB_ACTIONS_SETUP.md)
-- [配置示例](config.example.yaml)
+- [Kindle Push Setup](KINDLE_SETUP.md)
+- [GitHub Actions Setup](GITHUB_ACTIONS_SETUP.md)
+- [Configuration Example](config.example.yaml)
 
-## 📄 许可证
+## 📄 License
 
 MIT License
 
-## 🤝 贡献
+## 🤝 Contributing
 
-欢迎提交Issue和Pull Request！
+Issues and Pull Requests are welcome!
 
-## 🙏 致谢
+## 🙏 Acknowledgments
 
-- [ebooklib](https://github.com/aerkalov/ebooklib) - EPUB生成库
-- [feedparser](https://github.com/kurtmckee/feedparser) - RSS解析库
-- [readability-lxml](https://github.com/buriy/python-readability) - 网页内容提取
+- [ebooklib](https://github.com/aerkalov/ebooklib) - EPUB generation library
+- [feedparser](https://github.com/kurtmckee/feedparser) - RSS parsing library
+- [readability-lxml](https://github.com/buriy/python-readability) - Web content extraction
 
 ---
 
-如有问题或建议，请提交[Issue](https://github.com/ZRui-C/KindleRSS/issues)。
+For questions or suggestions, please submit an [Issue](https://github.com/ZRui-C/KindleRSS/issues).

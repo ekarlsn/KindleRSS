@@ -1,45 +1,45 @@
 Settings:
-  max_history: 7  # 最多保留最近7天的文章
-  load_images: true  # 是否加载图片
-  filename_template: "RSS订阅_{date}.epub"  # 自定义文件名模板
-  # 可用占位符:
-  # {year} - 年份 (2025)
-  # {month} - 月份 (07)
-  # {day} - 日期 (04)
-  # {hour} - 小时 (14)
-  # {minute} - 分钟 (30)
-  # {second} - 秒 (45)
-  # {date} - 中文日期 (2025年7月4日)
-  # {time} - 中文时间 (14时30分)
-  # {datetime} - 中文日期时间 (2025年7月4日_14时30分)
-  # 示例: "RSS精选_{date}.epub" → "RSS精选_2025年7月4日.epub"
+  max_history: 7 # Keep articles from the last 7 days
+  load_images: true # Whether to download images
+  filename_template: "RSS_Feed_{date}.epub" # Custom filename template
+  # Available placeholders:
+  # {year}     - Year (2025)
+  # {month}    - Month (07)
+  # {day}      - Day (04)
+  # {hour}     - Hour (14)
+  # {minute}   - Minute (30)
+  # {second}   - Second (45)
+  # {date}     - Date (2025-07-04)
+  # {time}     - Time (14:30)
+  # {datetime} - Date and time (2025-07-04_14-30)
+  # Example: "RSS_Digest_{date}.epub" → "RSS_Digest_2025-07-04.epub"
 
 Feeds:
-  # 示例1: 使用CSS选择器提取内容
+  # Example 1: Extract content using CSS selectors
   - url: "https://sspai.com/feed"
-    name: "少数派"
-    title: "少数派精选"
+    name: "SSPAI"
+    title: "SSPAI Selected"
     enabled: true
     resolve_link:
       enabled: true
-      method: "selector"  # 优先使用选择器
+      method: "selector" # Use selectors first
       selectors:
-        content: "article, .post-content, .article-content, main"  # 内容选择器
-        remove: ".ads, .comments, .related-posts, script, style"  # 要移除的元素
-      fallback: "readability"  # 选择器失败时使用readability
+        content: "article, .post-content, .article-content, main" # Content selectors
+        remove: ".ads, .comments, .related-posts, script, style" # Elements to remove
+      fallback: "readability" # Fall back to readability if selectors fail
 
-  # 示例2: 直接使用readability自动提取
-  - url: "https://feeds.feedburner.com/ruanyifeng"
-    name: "阮一峰"
-    title: "阮一峰的网络日志"
+  # Example 2: Use readability for automatic extraction
+  - url: "https://feeds.feedburner.com/oreilly/radar"
+    name: "O'Reilly Radar"
+    title: "O'Reilly Radar"
     enabled: true
     resolve_link:
       enabled: true
-      method: "readability"  # 直接使用readability
+      method: "readability" # Use readability directly
 
-  # 示例3: 不解析原始链接，使用RSS摘要
+  # Example 3: No link resolution, use RSS summary as-is
   - url: "https://www.v2ex.com/index.xml"
     name: "V2EX"
-    title: "V2EX热门"
+    title: "V2EX Hot"
     enabled: true
-    # 没有resolve_link配置，使用默认RSS内容
+    # No resolve_link config — uses the default RSS content

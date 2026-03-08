@@ -1,37 +1,37 @@
-# 邮件配置示例
-# 请复制此文件为 email_config.yaml 并填写实际信息
+# Email configuration example
+# Copy this file to email_config.yaml and fill in your actual details
 
-# SMTP服务器设置
-smtp_server: "smtp.gmail.com"  # SMTP服务器地址
-smtp_port: 587  # 587 for STARTTLS, 465 for SSL
+# SMTP server settings
+smtp_server: "smtp.gmail.com" # SMTP server address
+smtp_port: 587 # 587 for STARTTLS, 465 for SSL
 
-# 发件人信息
-sender_email: "your_email@gmail.com"  # 你的邮箱地址
-sender_password: "your_app_password"   # 邮箱密码或应用专用密码
+# Sender details
+sender_email: "your_email@gmail.com" # Your email address
+sender_password: "your_app_password" # Email password or app-specific password
 
-# Kindle接收邮箱
-kindle_email: "your_kindle@kindle.com"  # 你的Kindle邮箱地址
+# Kindle receiving email
+kindle_email: "your_kindle@kindle.com" # Your Kindle email address
 
-# 邮件主题和正文（可选）
-subject: "RSS Feed"  # 邮件主题
-body: "您订阅的RSS内容"  # 邮件正文
+# Email subject and body (optional)
+subject: "RSS Feed" # Email subject
+body: "Your RSS feed digest" # Email body
 
-# ====== 常见邮箱SMTP设置参考 ======
-# 
+# ====== Common SMTP settings reference ======
+#
 # Gmail:
 #   smtp_server: smtp.gmail.com
 #   smtp_port: 587
-#   注意：需要开启两步验证并使用应用专用密码
+#   Note: Requires 2-factor authentication and an app-specific password
 #
-# QQ邮箱:
+# QQ Mail:
 #   smtp_server: smtp.qq.com
 #   smtp_port: 587
-#   注意：需要使用授权码而非QQ密码
+#   Note: Use the authorization code, not your QQ password
 #
-# 163邮箱:
+# 163 Mail:
 #   smtp_server: smtp.163.com
 #   smtp_port: 465
-#   注意：需要使用授权码
+#   Note: Use the authorization code
 #
 # Outlook:
 #   smtp_server: smtp-mail.outlook.com
