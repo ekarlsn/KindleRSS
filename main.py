@@ -393,15 +393,13 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=
         if isinstance(feed_data, dict) and "entries" in feed_data:
             entries = feed_data["entries"]
             feed_meta = feed_data.get("feed_meta", {})
-            config_name = feed_data.get("config_name")
         else:
             # Compatible with old format (entries list directly)
             entries = feed_data
             feed_meta = {}
-            config_name = None
 
-        # Prefer config name, then feed title, then feed_key
-        feed_name = config_name or feed_meta.get("title", feed_key)
+        # Use feed title from metadata, falling back to feed_key
+        feed_name = feed_meta.get("title", feed_key)
 
         if not entries:
             continue
@@ -576,7 +574,7 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=
 
             # Check if we need to resolve content from the original link
             feed_config = feeds_config.get(feed_name, {}) if feeds_config else {}
-            resolve_config = feed_config.get("resolve_link", None)
+            resolve_config = feed_config.get("resolve_link", {"method": "readability"})
 
             if resolve_config and entry.get("link"):
                 resolved_content = resolve_link_content(entry.link, resolve_config)
@@ -828,17 +826,14 @@ def generate_epub(config_path: str):
                 parsed_feed.entries, config["Settings"].get("max_history", -1)
             )
 
-            # Save the config name and feed metadata
-            feed_title = feed.get("title", feed.get("name", feed["url"]))
+            # Save the feed title and metadata
+            feed_title = feed.get("title", feed["url"])
 
             all_feeds[feed_title] = {
                 "entries": entries,
-                "config_name": feed.get("name"),
                 "feed_meta": parsed_feed.feed,  # Contains feed metadata
             }
-            # Save feed config - use config name as key for consistency
-            config_key = feed.get("name", feed_title)
-            feeds_config[config_key] = feed
+            feeds_config[feed_title] = feed
 
     # Get custom filename template if configured
     custom_filename = config.get("Settings", {}).get("filename_template")

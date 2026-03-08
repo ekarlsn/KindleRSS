@@ -99,17 +99,29 @@ Settings:
   load_images: true  # Whether to download images
 
 Feeds:
+  # Minimal entry — enabled and readability full-text extraction are the defaults.
   - url: "https://example.com/rss"
-    name: "Example Feed"
-    title: "Example Title"
-    enabled: true
-    resolve_link:  # Optional: extract full text
-      enabled: true
-      method: "readability"  # or "selector"
-      selectors:  # Used when method is selector
+    title: "Example Blog"
+
+  # Disable a feed without removing it.
+  - url: "https://example.com/other.xml"
+    title: "Paused Feed"
+    enabled: false
+
+  # Override to use CSS selectors instead of readability.
+  - url: "https://example.com/selector-site/feed.xml"
+    title: "Selector Site"
+    resolve_link:
+      method: "selector"
+      selectors:
         content: "article, .content"
         remove: ".ads, .comments"
       fallback: "readability"
+
+  # Disable link resolution — use the RSS summary as-is.
+  - url: "https://example.com/summary-only/feed.xml"
+    title: "Summary Only Feed"
+    resolve_link: false
 ```
 
 ### Email Configuration (email_config.yaml)

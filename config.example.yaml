@@ -1,45 +1,34 @@
 Settings:
-  max_history: 7 # Keep articles from the last 7 days
-  load_images: true # Whether to download images
-  filename_template: "RSS_Feed_{date}.epub" # Custom filename template
+  max_history: 7 # Keep articles from the last N days (0 = no limit)
+  load_images: true # Download and embed images in the EPUB
+  filename_template: "RSS_Digest_{date}.epub"
   # Available placeholders:
-  # {year}     - Year (2025)
-  # {month}    - Month (07)
-  # {day}      - Day (04)
-  # {hour}     - Hour (14)
-  # {minute}   - Minute (30)
-  # {second}   - Second (45)
-  # {date}     - Date (2025-07-04)
-  # {time}     - Time (14:30)
-  # {datetime} - Date and time (2025-07-04_14-30)
-  # Example: "RSS_Digest_{date}.epub" → "RSS_Digest_2025-07-04.epub"
+  # {year}, {month}, {day}, {hour}, {minute}, {second}
+  # {date}     - Date           (2025-07-04)
+  # {time}     - Time           (14:30)
+  # {datetime} - Date and time  (2025-07-04_14-30)
 
 Feeds:
-  # Example 1: Extract content using CSS selectors
-  - url: "https://sspai.com/feed"
-    name: "SSPAI"
-    title: "SSPAI Selected"
-    enabled: true
+  # Minimal entry — enabled and readability resolve_link are the defaults.
+  - url: "https://example.com/feed.xml"
+    title: "Example Blog"
+
+  # Disable a feed without removing it.
+  - url: "https://example.com/other.xml"
+    title: "Paused Feed"
+    enabled: false
+
+  # Override to use CSS selectors instead of readability.
+  - url: "https://example.com/selector-site/feed.xml"
+    title: "Selector Site"
     resolve_link:
-      enabled: true
-      method: "selector" # Use selectors first
+      method: "selector"
       selectors:
-        content: "article, .post-content, .article-content, main" # Content selectors
-        remove: ".ads, .comments, .related-posts, script, style" # Elements to remove
-      fallback: "readability" # Fall back to readability if selectors fail
+        content: "article, .post-content, main"
+        remove: ".ads, .comments, script, style"
+      fallback: "readability"
 
-  # Example 2: Use readability for automatic extraction
-  - url: "https://feeds.feedburner.com/oreilly/radar"
-    name: "O'Reilly Radar"
-    title: "O'Reilly Radar"
-    enabled: true
-    resolve_link:
-      enabled: true
-      method: "readability" # Use readability directly
-
-  # Example 3: No link resolution, use RSS summary as-is
-  - url: "https://www.v2ex.com/index.xml"
-    name: "V2EX"
-    title: "V2EX Hot"
-    enabled: true
-    # No resolve_link config — uses the default RSS content
+  # Disable link resolution entirely — use the RSS summary as-is.
+  - url: "https://example.com/summary-only/feed.xml"
+    title: "Summary Only Feed"
+    resolve_link: false
