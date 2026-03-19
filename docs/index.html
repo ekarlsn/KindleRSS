@@ -5,38 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KindleRSS - 智能RSS转Kindle推送解决方案 | 自动化阅读管理</title>
     <meta name="baidu-site-verification" content="codeva-WX960TCjlc" />
-    
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="KindleRSS是一款专业的RSS订阅转换工具，自动将RSS内容转换为精美EPUB电子书并推送到Kindle。支持全文提取、图片优化、GitHub Actions自动化，让您的阅读更高效。">
     <meta name="keywords" content="RSS to Kindle, RSS转EPUB, Kindle推送, RSS阅读器, 自动化阅读, GitHub Actions, RSS订阅管理, 电子书转换, Kindle邮件推送">
     <meta name="author" content="KindleRSS Team">
     <meta name="robots" content="index, follow">
-    
+
     <!-- Open Graph -->
     <meta property="og:title" content="KindleRSS - 智能RSS转Kindle推送解决方案">
     <meta property="og:description" content="自动化将RSS订阅转换为精美EPUB电子书，智能推送到Kindle设备。支持全文提取、图片优化、定时推送。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kindle.hluvmiku.tech/">
     <meta property="og:image" content="https://kindle.hluvmiku.tech/og-image.jpg">
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="KindleRSS - 智能RSS转Kindle推送解决方案">
     <meta name="twitter:description" content="自动化将RSS订阅转换为精美EPUB电子书，智能推送到Kindle设备。">
     <meta name="twitter:image" content="https://kindle.hluvmiku.tech/twitter-card.jpg">
-    
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://kindle.hluvmiku.tech/">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <!-- Custom Styles -->
     <style>
         .gradient-text {
@@ -59,7 +59,7 @@
             scroll-behavior: smooth;
         }
     </style>
-    
+
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
@@ -102,7 +102,7 @@
                         <i class="fas fa-tools mr-1"></i>转换器
                     </a>
                     <a href="en/" class="text-gray-600 hover:text-purple-600 transition">EN</a>
-                    <a href="https://github.com/ZRui-C/KindleRSS" target="_blank" 
+                    <a href="https://github.com/ZRui-C/KindleRSS" target="_blank"
                        class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition flex items-center space-x-2">
                         <i class="fab fa-github"></i>
                         <span>开始使用</span>
@@ -146,7 +146,7 @@
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">开源免费，专为阅读而生</h2>
                 <p class="text-xl text-gray-600">每一个细节都为提升您的阅读体验而精心设计</p>
             </div>
-            
+
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
                 <div class="feature-card bg-white rounded-xl p-6 shadow-lg">
@@ -212,7 +212,7 @@
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">简单三步，开启智能阅读</h2>
                 <p class="text-xl text-gray-600">配置简单，上手即用</p>
             </div>
-            
+
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="text-center">
                     <div class="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">
@@ -221,7 +221,7 @@
                     <h3 class="text-xl font-semibold mb-2">Fork & 配置</h3>
                     <p class="text-gray-600">Fork项目到您的GitHub，添加RSS源和邮箱配置</p>
                 </div>
-                
+
                 <div class="text-center">
                     <div class="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">
                         2
@@ -229,7 +229,7 @@
                     <h3 class="text-xl font-semibold mb-2">设置Secrets</h3>
                     <p class="text-gray-600">在GitHub仓库中安全配置SMTP和Kindle邮箱信息</p>
                 </div>
-                
+
                 <div class="text-center">
                     <div class="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">
                         3
@@ -248,7 +248,7 @@
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">配置示例</h2>
                 <p class="text-xl text-gray-600">简洁的YAML配置，强大的功能支持</p>
             </div>
-            
+
             <div class="bg-gray-900 rounded-xl p-6 max-w-4xl mx-auto">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-gray-400 text-sm">config.yaml</span>
@@ -259,7 +259,6 @@
                 <pre class="text-green-400 overflow-x-auto"><code>Settings:
   max_history: 7  # 保留最近7天文章
   load_images: true  # 下载并嵌入图片
-  filename_template: "RSS精选_{date}.epub"  # 自定义文件名
 
 Feeds:
   - url: "https://sspai.com/feed"
@@ -268,7 +267,7 @@ Feeds:
     resolve_link:
       enabled: true
       method: "readability"  # 智能全文提取
-      
+
   - url: "https://feeds.feedburner.com/ruanyifeng"
     name: "阮一峰"
     enabled: true</code></pre>
@@ -283,13 +282,13 @@ Feeds:
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">永久免费，开源共享</h2>
                 <p class="text-xl text-gray-600">基于MIT协议，您可以自由使用、修改和分发</p>
             </div>
-            
+
             <div class="max-w-md mx-auto bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-8 text-white shadow-2xl">
                 <div class="text-center">
                     <h3 class="text-2xl font-bold mb-4">开源版本</h3>
                     <div class="text-5xl font-bold mb-2">￥0</div>
                     <div class="text-purple-200 mb-8">永久免费</div>
-                    
+
                     <ul class="text-left space-y-3 mb-8">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle mr-3"></i>
@@ -312,7 +311,7 @@ Feeds:
                             <span>持续更新维护</span>
                         </li>
                     </ul>
-                    
+
                     <a href="https://github.com/ZRui-C/KindleRSS" target="_blank"
                        class="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition inline-block">
                         立即使用
@@ -329,28 +328,28 @@ Feeds:
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">常见问题</h2>
                 <p class="text-xl text-gray-600">快速了解产品核心信息</p>
             </div>
-            
+
             <div class="space-y-4">
                 <div class="bg-white rounded-xl p-6 shadow-lg">
                     <h3 class="text-xl font-semibold mb-2">需要付费吗？</h3>
                     <p class="text-gray-600">完全免费！基于MIT开源协议，您可以自由使用、修改和分发。</p>
                 </div>
-                
+
                 <div class="bg-white rounded-xl p-6 shadow-lg">
                     <h3 class="text-xl font-semibold mb-2">支持哪些RSS源？</h3>
                     <p class="text-gray-600">支持所有标准RSS/Atom格式的订阅源，可同时配置多个源进行聚合。</p>
                 </div>
-                
+
                 <div class="bg-white rounded-xl p-6 shadow-lg">
                     <h3 class="text-xl font-semibold mb-2">如何设置自动推送？</h3>
                     <p class="text-gray-600">使用GitHub Actions，只需配置一次即可实现每日定时自动推送，也支持手动触发。</p>
                 </div>
-                
+
                 <div class="bg-white rounded-xl p-6 shadow-lg">
                     <h3 class="text-xl font-semibold mb-2">支持哪些Kindle设备？</h3>
                     <p class="text-gray-600">支持所有能接收邮件推送的Kindle设备，包括Kindle Oasis、Paperwhite、基础版等。</p>
                 </div>
-                
+
                 <div class="bg-white rounded-xl p-6 shadow-lg">
                     <h3 class="text-xl font-semibold mb-2">图片能正常显示吗？</h3>
                     <p class="text-gray-600">支持图片自动下载和嵌入，WebP格式会自动转换为Kindle兼容格式，并防止跨页显示。</p>
@@ -390,7 +389,7 @@ Feeds:
                     </div>
                     <p class="text-gray-400">智能RSS阅读解决方案</p>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">产品</h4>
                     <ul class="space-y-2 text-gray-400">
@@ -399,7 +398,7 @@ Feeds:
                         <li><a href="https://github.com/ZRui-C/KindleRSS/releases" class="hover:text-white transition">更新日志</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">资源</h4>
                     <ul class="space-y-2 text-gray-400">
@@ -408,7 +407,7 @@ Feeds:
                         <li><a href="https://github.com/ZRui-C/KindleRSS/discussions" class="hover:text-white transition">社区讨论</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h4 class="font-semibold mb-4">关注我们</h4>
                     <div class="flex space-x-4">
@@ -424,7 +423,7 @@ Feeds:
                     </div>
                 </div>
             </div>
-            
+
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
                 <p>&copy; 2025 KindleRSS. MIT License. Made with ❤️ by <a href="https://hluvmiku.tech"">ZRui-C</a></p>
             </div>

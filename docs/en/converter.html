@@ -330,7 +330,6 @@
                     Settings: {
                         max_history: 7,
                         load_images: true,
-                        filename_template: 'RSS_{date}.epub'
                     },
                     Feeds: feeds
                 };
@@ -358,7 +357,6 @@
                 let yaml = 'Settings:\n';
                 yaml += `  max_history: ${config.Settings.max_history}  # Keep articles from the last N days\n`;
                 yaml += `  load_images: ${config.Settings.load_images}  # Whether to download images\n`;
-                yaml += `  filename_template: "${config.Settings.filename_template}"  # Custom filename template\n`;
                 yaml += '\nFeeds:\n';
                 
                 config.Feeds.forEach(feed => {

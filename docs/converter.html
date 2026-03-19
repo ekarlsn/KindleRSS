@@ -1,430 +1,572 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPML转换器 - KindleRSS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .drop-zone {
-            transition: all 0.3s ease;
-        }
-        .drop-zone.dragover {
-            background-color: #e9d5ff;
-            border-color: #9333ea;
-        }
-        pre {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .copy-success {
-            animation: fadeInOut 2s ease;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-    </style>
-</head>
-<body class="font-sans bg-gray-50">
-    <!-- 导航栏 -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-rss text-purple-600 text-2xl"></i>
-                    <span class="font-bold text-xl text-gray-800">KindleRSS</span>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="./" class="text-gray-600 hover:text-purple-600 transition">首页</a>
-                    <a href="en/converter.html" class="text-gray-600 hover:text-purple-600 transition">EN</a>
-                    <a href="https://github.com/ZRui-C/KindleRSS" target="_blank" 
-                       class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition flex items-center space-x-2">
-                        <i class="fab fa-github"></i>
-                        <span>GitHub</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 主内容 -->
-    <div class="container mx-auto px-6 py-12">
-        <div class="max-w-4xl mx-auto">
-            <!-- 标题 -->
-            <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-gray-800 mb-4">OPML 转换器</h1>
-                <p class="text-xl text-gray-600">将 OPML 文件转换为 KindleRSS 配置格式</p>
-            </div>
-
-            <!-- 说明 -->
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
-                <div class="flex items-start">
-                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
-                    <div>
-                        <h3 class="font-semibold text-gray-800 mb-2">使用说明</h3>
-                        <ol class="list-decimal list-inside text-gray-700 space-y-1">
-                            <li>上传您的 OPML 文件（通常从 RSS 阅读器导出）</li>
-                            <li>系统会自动将其转换为 config.yaml 格式</li>
-                            <li>点击"复制配置"按钮复制配置内容</li>
-                            <li>将配置内容粘贴到您的 config.yaml 文件中</li>
-                        </ol>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>OPML转换器 - KindleRSS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            .gradient-bg {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            .drop-zone {
+                transition: all 0.3s ease;
+            }
+            .drop-zone.dragover {
+                background-color: #e9d5ff;
+                border-color: #9333ea;
+            }
+            pre {
+                max-height: 500px;
+                overflow-y: auto;
+            }
+            .copy-success {
+                animation: fadeInOut 2s ease;
+            }
+            @keyframes fadeInOut {
+                0% {
+                    opacity: 0;
+                }
+                20% {
+                    opacity: 1;
+                }
+                80% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body class="font-sans bg-gray-50">
+        <!-- 导航栏 -->
+        <nav class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-rss text-purple-600 text-2xl"></i>
+                        <span class="font-bold text-xl text-gray-800"
+                            >KindleRSS</span
+                        >
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a
+                            href="./"
+                            class="text-gray-600 hover:text-purple-600 transition"
+                            >首页</a
+                        >
+                        <a
+                            href="en/converter.html"
+                            class="text-gray-600 hover:text-purple-600 transition"
+                            >EN</a
+                        >
+                        <a
+                            href="https://github.com/ZRui-C/KindleRSS"
+                            target="_blank"
+                            class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition flex items-center space-x-2"
+                        >
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </a>
                     </div>
                 </div>
             </div>
+        </nav>
 
-            <!-- 上传区域 -->
-            <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-                <div id="dropZone" class="drop-zone border-3 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500">
-                    <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-                    <p class="text-xl text-gray-600 mb-2">拖拽 OPML 文件到这里</p>
-                    <p class="text-gray-500 mb-4">或者</p>
-                    <label for="fileInput" class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition cursor-pointer inline-block">
-                        <i class="fas fa-file-upload mr-2"></i>
-                        选择文件
-                    </label>
-                    <input type="file" id="fileInput" accept=".opml,.xml" class="hidden">
+        <!-- 主内容 -->
+        <div class="container mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto">
+                <!-- 标题 -->
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                        OPML 转换器
+                    </h1>
+                    <p class="text-xl text-gray-600">
+                        将 OPML 文件转换为 KindleRSS 配置格式
+                    </p>
                 </div>
-                
-                <!-- 文件信息 -->
-                <div id="fileInfo" class="hidden mt-6 p-4 bg-gray-50 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <i class="fas fa-file-code text-purple-600 mr-3"></i>
-                            <div>
-                                <p class="font-semibold text-gray-800" id="fileName"></p>
-                                <p class="text-sm text-gray-500" id="fileSize"></p>
+
+                <!-- 说明 -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+                    <div class="flex items-start">
+                        <i
+                            class="fas fa-info-circle text-blue-500 mt-1 mr-3"
+                        ></i>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">
+                                使用说明
+                            </h3>
+                            <ol
+                                class="list-decimal list-inside text-gray-700 space-y-1"
+                            >
+                                <li>
+                                    上传您的 OPML 文件（通常从 RSS 阅读器导出）
+                                </li>
+                                <li>系统会自动将其转换为 config.yaml 格式</li>
+                                <li>点击"复制配置"按钮复制配置内容</li>
+                                <li>将配置内容粘贴到您的 config.yaml 文件中</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 上传区域 -->
+                <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                    <div
+                        id="dropZone"
+                        class="drop-zone border-3 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500"
+                    >
+                        <i
+                            class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"
+                        ></i>
+                        <p class="text-xl text-gray-600 mb-2">
+                            拖拽 OPML 文件到这里
+                        </p>
+                        <p class="text-gray-500 mb-4">或者</p>
+                        <label
+                            for="fileInput"
+                            class="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition cursor-pointer inline-block"
+                        >
+                            <i class="fas fa-file-upload mr-2"></i>
+                            选择文件
+                        </label>
+                        <input
+                            type="file"
+                            id="fileInput"
+                            accept=".opml,.xml"
+                            class="hidden"
+                        />
+                    </div>
+
+                    <!-- 文件信息 -->
+                    <div
+                        id="fileInfo"
+                        class="hidden mt-6 p-4 bg-gray-50 rounded-lg"
+                    >
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i
+                                    class="fas fa-file-code text-purple-600 mr-3"
+                                ></i>
+                                <div>
+                                    <p
+                                        class="font-semibold text-gray-800"
+                                        id="fileName"
+                                    ></p>
+                                    <p
+                                        class="text-sm text-gray-500"
+                                        id="fileSize"
+                                    ></p>
+                                </div>
+                            </div>
+                            <button
+                                id="removeFile"
+                                class="text-red-500 hover:text-red-700"
+                            >
+                                <i class="fas fa-times-circle text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 转换结果 -->
+                <div id="resultSection" class="hidden">
+                    <div class="bg-white rounded-lg shadow-md p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-code text-purple-600 mr-2"></i>
+                                转换结果
+                            </h2>
+                            <div class="flex space-x-3">
+                                <button
+                                    id="downloadBtn"
+                                    class="bg-gray-600 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition flex items-center"
+                                >
+                                    <i class="fas fa-download mr-2"></i>
+                                    下载配置
+                                </button>
+                                <button
+                                    id="copyBtn"
+                                    class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition flex items-center"
+                                >
+                                    <i class="fas fa-copy mr-2"></i>
+                                    复制配置
+                                </button>
                             </div>
                         </div>
-                        <button id="removeFile" class="text-red-500 hover:text-red-700">
-                            <i class="fas fa-times-circle text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 转换结果 -->
-            <div id="resultSection" class="hidden">
-                <div class="bg-white rounded-lg shadow-md p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800">
-                            <i class="fas fa-code text-purple-600 mr-2"></i>
-                            转换结果
-                        </h2>
-                        <div class="flex space-x-3">
-                            <button id="downloadBtn" class="bg-gray-600 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition flex items-center">
-                                <i class="fas fa-download mr-2"></i>
-                                下载配置
-                            </button>
-                            <button id="copyBtn" class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition flex items-center">
-                                <i class="fas fa-copy mr-2"></i>
-                                复制配置
-                            </button>
+                        <!-- 统计信息 -->
+                        <div id="statsInfo" class="grid grid-cols-3 gap-4 mb-6">
+                            <div
+                                class="bg-purple-50 rounded-lg p-4 text-center"
+                            >
+                                <p
+                                    class="text-3xl font-bold text-purple-600"
+                                    id="feedCount"
+                                >
+                                    0
+                                </p>
+                                <p class="text-gray-600">RSS源数量</p>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-4 text-center">
+                                <p
+                                    class="text-3xl font-bold text-green-600"
+                                    id="enabledCount"
+                                >
+                                    0
+                                </p>
+                                <p class="text-gray-600">已启用</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                <p
+                                    class="text-3xl font-bold text-blue-600"
+                                    id="resolveCount"
+                                >
+                                    0
+                                </p>
+                                <p class="text-gray-600">全文提取</p>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- 统计信息 -->
-                    <div id="statsInfo" class="grid grid-cols-3 gap-4 mb-6">
-                        <div class="bg-purple-50 rounded-lg p-4 text-center">
-                            <p class="text-3xl font-bold text-purple-600" id="feedCount">0</p>
-                            <p class="text-gray-600">RSS源数量</p>
+
+                        <!-- 配置预览 -->
+                        <pre
+                            id="configOutput"
+                            class="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto"
+                        ><code></code></pre>
+
+                        <!-- 复制成功提示 -->
+                        <div
+                            id="copySuccess"
+                            class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg copy-success"
+                        >
+                            <i class="fas fa-check-circle mr-2"></i>
+                            已复制到剪贴板！
                         </div>
-                        <div class="bg-green-50 rounded-lg p-4 text-center">
-                            <p class="text-3xl font-bold text-green-600" id="enabledCount">0</p>
-                            <p class="text-gray-600">已启用</p>
-                        </div>
-                        <div class="bg-blue-50 rounded-lg p-4 text-center">
-                            <p class="text-3xl font-bold text-blue-600" id="resolveCount">0</p>
-                            <p class="text-gray-600">全文提取</p>
-                        </div>
-                    </div>
-                    
-                    <!-- 配置预览 -->
-                    <pre id="configOutput" class="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto"><code></code></pre>
-                    
-                    <!-- 复制成功提示 -->
-                    <div id="copySuccess" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg copy-success">
-                        <i class="fas fa-check-circle mr-2"></i>
-                        已复制到剪贴板！
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- 页脚 -->
-    <footer class="bg-gray-800 text-white py-8 mt-20">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-rss text-purple-400 text-xl"></i>
-                        <span class="font-bold text-lg">KindleRSS</span>
+        <!-- 页脚 -->
+        <footer class="bg-gray-800 text-white py-8 mt-20">
+            <div class="container mx-auto px-6">
+                <div
+                    class="flex flex-col md:flex-row justify-between items-center"
+                >
+                    <div class="mb-4 md:mb-0">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-rss text-purple-400 text-xl"></i>
+                            <span class="font-bold text-lg">KindleRSS</span>
+                        </div>
+                        <p class="text-gray-400 mt-2">
+                            RSS转EPUB，为Kindle而生
+                        </p>
                     </div>
-                    <p class="text-gray-400 mt-2">RSS转EPUB，为Kindle而生</p>
+                    <div class="flex space-x-6">
+                        <a
+                            href="https://github.com/ZRui-C/KindleRSS"
+                            target="_blank"
+                            class="hover:text-purple-400 transition"
+                        >
+                            <i class="fab fa-github text-2xl"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="https://github.com/ZRui-C/KindleRSS" target="_blank" class="hover:text-purple-400 transition">
-                        <i class="fab fa-github text-2xl"></i>
-                    </a>
+                <div
+                    class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"
+                >
+                    <p>&copy; 2025 KindleRSS. MIT License.</p>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 KindleRSS. MIT License.</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
 
-    <script>
-        // OPML 解析和转换逻辑
-        class OPMLConverter {
-            constructor() {
-                this.initElements();
-                this.initEventListeners();
-            }
-
-            initElements() {
-                this.dropZone = document.getElementById('dropZone');
-                this.fileInput = document.getElementById('fileInput');
-                this.fileInfo = document.getElementById('fileInfo');
-                this.fileName = document.getElementById('fileName');
-                this.fileSize = document.getElementById('fileSize');
-                this.removeFile = document.getElementById('removeFile');
-                this.resultSection = document.getElementById('resultSection');
-                this.configOutput = document.getElementById('configOutput');
-                this.copyBtn = document.getElementById('copyBtn');
-                this.downloadBtn = document.getElementById('downloadBtn');
-                this.copySuccess = document.getElementById('copySuccess');
-                this.feedCount = document.getElementById('feedCount');
-                this.enabledCount = document.getElementById('enabledCount');
-                this.resolveCount = document.getElementById('resolveCount');
-            }
-
-            initEventListeners() {
-                // 拖拽事件
-                this.dropZone.addEventListener('dragover', this.handleDragOver.bind(this));
-                this.dropZone.addEventListener('dragleave', this.handleDragLeave.bind(this));
-                this.dropZone.addEventListener('drop', this.handleDrop.bind(this));
-                
-                // 文件选择
-                this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
-                this.dropZone.addEventListener('click', () => this.fileInput.click());
-                
-                // 移除文件
-                this.removeFile.addEventListener('click', this.clearFile.bind(this));
-                
-                // 复制和下载
-                this.copyBtn.addEventListener('click', this.copyConfig.bind(this));
-                this.downloadBtn.addEventListener('click', this.downloadConfig.bind(this));
-            }
-
-            handleDragOver(e) {
-                e.preventDefault();
-                this.dropZone.classList.add('dragover');
-            }
-
-            handleDragLeave(e) {
-                e.preventDefault();
-                this.dropZone.classList.remove('dragover');
-            }
-
-            handleDrop(e) {
-                e.preventDefault();
-                this.dropZone.classList.remove('dragover');
-                
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    this.processFile(files[0]);
+        <script>
+            // OPML 解析和转换逻辑
+            class OPMLConverter {
+                constructor() {
+                    this.initElements();
+                    this.initEventListeners();
                 }
-            }
 
-            handleFileSelect(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    this.processFile(files[0]);
+                initElements() {
+                    this.dropZone = document.getElementById("dropZone");
+                    this.fileInput = document.getElementById("fileInput");
+                    this.fileInfo = document.getElementById("fileInfo");
+                    this.fileName = document.getElementById("fileName");
+                    this.fileSize = document.getElementById("fileSize");
+                    this.removeFile = document.getElementById("removeFile");
+                    this.resultSection =
+                        document.getElementById("resultSection");
+                    this.configOutput = document.getElementById("configOutput");
+                    this.copyBtn = document.getElementById("copyBtn");
+                    this.downloadBtn = document.getElementById("downloadBtn");
+                    this.copySuccess = document.getElementById("copySuccess");
+                    this.feedCount = document.getElementById("feedCount");
+                    this.enabledCount = document.getElementById("enabledCount");
+                    this.resolveCount = document.getElementById("resolveCount");
                 }
-            }
 
-            processFile(file) {
-                // 显示文件信息
-                this.fileName.textContent = file.name;
-                this.fileSize.textContent = this.formatFileSize(file.size);
-                this.fileInfo.classList.remove('hidden');
-                
-                // 读取文件
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const opmlContent = e.target.result;
-                        const config = this.convertOPMLtoConfig(opmlContent);
-                        this.displayResult(config);
-                    } catch (error) {
-                        alert('解析OPML文件失败：' + error.message);
-                        this.clearFile();
+                initEventListeners() {
+                    // 拖拽事件
+                    this.dropZone.addEventListener(
+                        "dragover",
+                        this.handleDragOver.bind(this),
+                    );
+                    this.dropZone.addEventListener(
+                        "dragleave",
+                        this.handleDragLeave.bind(this),
+                    );
+                    this.dropZone.addEventListener(
+                        "drop",
+                        this.handleDrop.bind(this),
+                    );
+
+                    // 文件选择
+                    this.fileInput.addEventListener(
+                        "change",
+                        this.handleFileSelect.bind(this),
+                    );
+                    this.dropZone.addEventListener("click", () =>
+                        this.fileInput.click(),
+                    );
+
+                    // 移除文件
+                    this.removeFile.addEventListener(
+                        "click",
+                        this.clearFile.bind(this),
+                    );
+
+                    // 复制和下载
+                    this.copyBtn.addEventListener(
+                        "click",
+                        this.copyConfig.bind(this),
+                    );
+                    this.downloadBtn.addEventListener(
+                        "click",
+                        this.downloadConfig.bind(this),
+                    );
+                }
+
+                handleDragOver(e) {
+                    e.preventDefault();
+                    this.dropZone.classList.add("dragover");
+                }
+
+                handleDragLeave(e) {
+                    e.preventDefault();
+                    this.dropZone.classList.remove("dragover");
+                }
+
+                handleDrop(e) {
+                    e.preventDefault();
+                    this.dropZone.classList.remove("dragover");
+
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        this.processFile(files[0]);
                     }
-                };
-                reader.readAsText(file);
-            }
+                }
 
-            convertOPMLtoConfig(opmlContent) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(opmlContent, 'text/xml');
-                
-                // 检查解析错误
-                const parserError = doc.querySelector('parsererror');
-                if (parserError) {
-                    throw new Error('无效的OPML文件格式');
+                handleFileSelect(e) {
+                    const files = e.target.files;
+                    if (files.length > 0) {
+                        this.processFile(files[0]);
+                    }
                 }
-                
-                // 获取所有outline元素
-                const outlines = doc.querySelectorAll('outline[xmlUrl]');
-                
-                if (outlines.length === 0) {
-                    throw new Error('未找到RSS源');
-                }
-                
-                const feeds = [];
-                let enabledCount = 0;
-                let resolveCount = 0;
-                
-                outlines.forEach(outline => {
-                    const xmlUrl = outline.getAttribute('xmlUrl');
-                    const title = outline.getAttribute('title') || outline.getAttribute('text') || '未命名';
-                    const htmlUrl = outline.getAttribute('htmlUrl') || '';
-                    
-                    // 判断是否需要全文提取（基于常见的需要全文的网站）
-                    const needsResolve = this.shouldResolveLink(xmlUrl, htmlUrl);
-                    
-                    const feed = {
-                        url: xmlUrl,
-                        name: title,
-                        title: title,
-                        enabled: true
+
+                processFile(file) {
+                    // 显示文件信息
+                    this.fileName.textContent = file.name;
+                    this.fileSize.textContent = this.formatFileSize(file.size);
+                    this.fileInfo.classList.remove("hidden");
+
+                    // 读取文件
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const opmlContent = e.target.result;
+                            const config =
+                                this.convertOPMLtoConfig(opmlContent);
+                            this.displayResult(config);
+                        } catch (error) {
+                            alert("解析OPML文件失败：" + error.message);
+                            this.clearFile();
+                        }
                     };
-                    
-                    if (needsResolve) {
-                        feed.resolve_link = {
+                    reader.readAsText(file);
+                }
+
+                convertOPMLtoConfig(opmlContent) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(opmlContent, "text/xml");
+
+                    // 检查解析错误
+                    const parserError = doc.querySelector("parsererror");
+                    if (parserError) {
+                        throw new Error("无效的OPML文件格式");
+                    }
+
+                    // 获取所有outline元素
+                    const outlines = doc.querySelectorAll("outline[xmlUrl]");
+
+                    if (outlines.length === 0) {
+                        throw new Error("未找到RSS源");
+                    }
+
+                    const feeds = [];
+                    let enabledCount = 0;
+                    let resolveCount = 0;
+
+                    outlines.forEach((outline) => {
+                        const xmlUrl = outline.getAttribute("xmlUrl");
+                        const title =
+                            outline.getAttribute("title") ||
+                            outline.getAttribute("text") ||
+                            "未命名";
+                        const htmlUrl = outline.getAttribute("htmlUrl") || "";
+
+                        // 判断是否需要全文提取（基于常见的需要全文的网站）
+                        const needsResolve = this.shouldResolveLink(
+                            xmlUrl,
+                            htmlUrl,
+                        );
+
+                        const feed = {
+                            url: xmlUrl,
+                            name: title,
+                            title: title,
                             enabled: true,
-                            method: 'readability'
                         };
-                        resolveCount++;
-                    }
-                    
-                    feeds.push(feed);
-                    enabledCount++;
-                });
-                
-                // 更新统计
-                this.feedCount.textContent = feeds.length;
-                this.enabledCount.textContent = enabledCount;
-                this.resolveCount.textContent = resolveCount;
-                
-                // 生成配置对象
-                const config = {
-                    Settings: {
-                        max_history: 7,
-                        load_images: true,
-                        filename_template: 'RSS订阅_{date}.epub'
-                    },
-                    Feeds: feeds
-                };
-                
-                return this.configToYAML(config);
+
+                        if (needsResolve) {
+                            feed.resolve_link = {
+                                enabled: true,
+                                method: "readability",
+                            };
+                            resolveCount++;
+                        }
+
+                        feeds.push(feed);
+                        enabledCount++;
+                    });
+
+                    // 更新统计
+                    this.feedCount.textContent = feeds.length;
+                    this.enabledCount.textContent = enabledCount;
+                    this.resolveCount.textContent = resolveCount;
+
+                    // 生成配置对象
+                    const config = {
+                        Settings: {
+                            max_history: 7,
+                            load_images: true,
+                        },
+                        Feeds: feeds,
+                    };
+
+                    return this.configToYAML(config);
+                }
+
+                shouldResolveLink(xmlUrl, htmlUrl) {
+                    // 判断是否需要全文提取的规则
+                    const needsResolvePatterns = [
+                        "sspai.com",
+                        "ruanyifeng",
+                        "zhihu.com",
+                        "medium.com",
+                        "dev.to",
+                        "hackernoon.com",
+                        "techcrunch.com",
+                    ];
+
+                    const url = xmlUrl + htmlUrl;
+                    return needsResolvePatterns.some((pattern) =>
+                        url.includes(pattern),
+                    );
+                }
+
+                configToYAML(config) {
+                    let yaml = "Settings:\n";
+                    yaml += `  max_history: ${config.Settings.max_history}  # 最多保留最近N天的文章\n`;
+                    yaml += `  load_images: ${config.Settings.load_images}  # 是否加载图片\n`;
+                    yaml += "\nFeeds:\n";
+
+                    config.Feeds.forEach((feed) => {
+                        yaml += `  - url: "${feed.url}"\n`;
+                        yaml += `    name: "${feed.name}"\n`;
+                        yaml += `    title: "${feed.title}"\n`;
+                        yaml += `    enabled: ${feed.enabled}\n`;
+
+                        if (feed.resolve_link) {
+                            yaml += `    resolve_link:\n`;
+                            yaml += `      enabled: ${feed.resolve_link.enabled}\n`;
+                            yaml += `      method: "${feed.resolve_link.method}"  # 使用readability自动提取\n`;
+                        }
+
+                        yaml += "\n";
+                    });
+
+                    return yaml;
+                }
+
+                displayResult(configYAML) {
+                    this.configOutput.textContent = configYAML;
+                    this.resultSection.classList.remove("hidden");
+
+                    // 滚动到结果
+                    this.resultSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+
+                copyConfig() {
+                    const config = this.configOutput.textContent;
+                    navigator.clipboard.writeText(config).then(() => {
+                        this.copySuccess.classList.remove("hidden");
+                        setTimeout(() => {
+                            this.copySuccess.classList.add("hidden");
+                        }, 2000);
+                    });
+                }
+
+                downloadConfig() {
+                    const config = this.configOutput.textContent;
+                    const blob = new Blob([config], { type: "text/yaml" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "config.yaml";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+
+                clearFile() {
+                    this.fileInfo.classList.add("hidden");
+                    this.resultSection.classList.add("hidden");
+                    this.fileInput.value = "";
+                }
+
+                formatFileSize(bytes) {
+                    if (bytes === 0) return "0 Bytes";
+                    const k = 1024;
+                    const sizes = ["Bytes", "KB", "MB"];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return (
+                        Math.round((bytes / Math.pow(k, i)) * 100) / 100 +
+                        " " +
+                        sizes[i]
+                    );
+                }
             }
 
-            shouldResolveLink(xmlUrl, htmlUrl) {
-                // 判断是否需要全文提取的规则
-                const needsResolvePatterns = [
-                    'sspai.com',
-                    'ruanyifeng',
-                    'zhihu.com',
-                    'medium.com',
-                    'dev.to',
-                    'hackernoon.com',
-                    'techcrunch.com'
-                ];
-                
-                const url = xmlUrl + htmlUrl;
-                return needsResolvePatterns.some(pattern => url.includes(pattern));
-            }
-
-            configToYAML(config) {
-                let yaml = 'Settings:\n';
-                yaml += `  max_history: ${config.Settings.max_history}  # 最多保留最近N天的文章\n`;
-                yaml += `  load_images: ${config.Settings.load_images}  # 是否加载图片\n`;
-                yaml += `  filename_template: "${config.Settings.filename_template}"  # 自定义文件名模板\n`;
-                yaml += '\nFeeds:\n';
-                
-                config.Feeds.forEach(feed => {
-                    yaml += `  - url: "${feed.url}"\n`;
-                    yaml += `    name: "${feed.name}"\n`;
-                    yaml += `    title: "${feed.title}"\n`;
-                    yaml += `    enabled: ${feed.enabled}\n`;
-                    
-                    if (feed.resolve_link) {
-                        yaml += `    resolve_link:\n`;
-                        yaml += `      enabled: ${feed.resolve_link.enabled}\n`;
-                        yaml += `      method: "${feed.resolve_link.method}"  # 使用readability自动提取\n`;
-                    }
-                    
-                    yaml += '\n';
-                });
-                
-                return yaml;
-            }
-
-            displayResult(configYAML) {
-                this.configOutput.textContent = configYAML;
-                this.resultSection.classList.remove('hidden');
-                
-                // 滚动到结果
-                this.resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-
-            copyConfig() {
-                const config = this.configOutput.textContent;
-                navigator.clipboard.writeText(config).then(() => {
-                    this.copySuccess.classList.remove('hidden');
-                    setTimeout(() => {
-                        this.copySuccess.classList.add('hidden');
-                    }, 2000);
-                });
-            }
-
-            downloadConfig() {
-                const config = this.configOutput.textContent;
-                const blob = new Blob([config], { type: 'text/yaml' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'config.yaml';
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-
-            clearFile() {
-                this.fileInfo.classList.add('hidden');
-                this.resultSection.classList.add('hidden');
-                this.fileInput.value = '';
-            }
-
-            formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-            }
-        }
-
-        // 初始化转换器
-        new OPMLConverter();
-    </script>
-</body>
+            // 初始化转换器
+            new OPMLConverter();
+        </script>
+    </body>
 </html>
