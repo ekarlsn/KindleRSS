@@ -15,45 +15,11 @@ Ensure your repository contains the following files:
 - `.github/workflows/rss_to_kindle.yml` - GitHub Actions workflow
 - `requirements.txt` - Python dependencies
 
-### 2. Configure GitHub Secrets and Variables
+### 2. Configure GitHub Secrets
 
-#### Method 1: Using Repository Variables (Recommended)
+Add the following Secrets in your repository (`Settings` → `Secrets and variables` → `Actions` → `Secrets`):
 
-Set Variables in your GitHub repository:
-
-1. Go to your repository page
-2. Click `Settings` → `Secrets and variables` → `Actions`
-3. Select the `Variables` tab
-4. Click `New repository variable`
-5. Add `CONFIG_YAML` variable with complete config.yaml content
-
-**CONFIG_YAML Example Content:**
-```yaml
-Settings:
-  max_history: 7
-  load_images: true
-
-Feeds:
-  - url: "https://sspai.com/feed"
-    name: "SSPAI"
-    title: "SSPAI Selected"
-    enabled: true
-    resolve_link:
-      enabled: true
-      method: "readability"
-```
-
-#### Method 2: Using Secrets (for private RSS sources)
-
-If your RSS sources contain private information, use Secrets:
-
-1. Select the `Secrets` tab
-2. Click `New repository secret`
-3. Add `RSS_CONFIG` secret with complete config.yaml content
-
-### 3. Configure Email Secrets
-
-Add the following Secrets (required):
+**Required:**
 
 - `SMTP_SERVER` - SMTP server address
 - `SMTP_PORT` - SMTP port (587/465/25)
@@ -61,7 +27,7 @@ Add the following Secrets (required):
 - `SENDER_PASSWORD` - Email password or app-specific password
 - `KINDLE_EMAIL` - Kindle receiving email address
 
-Optional Secrets:
+**Optional:**
 - `EMAIL_SUBJECT` - Custom email subject (default: "RSS Feed")
 - `EMAIL_BODY` - Custom email body
 
@@ -74,7 +40,8 @@ Optional Secrets:
 | QQ Mail | smtp.qq.com | 587 | STARTTLS |
 | 163 Mail | smtp.163.com | 465 | SSL |
 
-### 4. Configure Kindle Whitelist
+
+### 3. Configure Kindle Whitelist
 
 **Important**: Add your sender email to Kindle's approved sender list:
 
@@ -84,7 +51,7 @@ Optional Secrets:
 4. Click "Add a new approved e-mail address"
 5. Enter your sender email address
 
-### 5. Workflow Configuration
+### 4. Workflow Configuration
 
 The repository includes three workflow files:
 
@@ -103,7 +70,7 @@ The repository includes three workflow files:
 - Tests EPUB generation only
 - No email sending
 
-### 6. Manual Trigger
+### 5. Manual Trigger
 
 To manually run the workflow:
 
@@ -116,10 +83,11 @@ To manually run the workflow:
 
 ## Configuration Examples
 
-### Complete Variable Configuration
+### config.yaml Example
+
+Commit a `config.yaml` file to your repository root with your RSS sources:
 
 ```yaml
-# CONFIG_YAML Variable Content
 Settings:
   max_history: 7
   load_images: true
@@ -162,7 +130,7 @@ For Gmail (requires app-specific password):
 ### Common Issues
 
 1. **Workflow fails with "Config not found"**
-   - Check if `CONFIG_YAML` or `RSS_CONFIG` variable is set
+   - Ensure `config.yaml` is committed to the repository root
    - Verify YAML syntax is correct
 
 2. **Email sending fails**
@@ -229,7 +197,6 @@ The advanced workflow can create GitHub Releases with the generated EPUB:
 
 - Never commit sensitive information to the repository
 - Use Secrets for all passwords and private information
-- Variables are visible to repository collaborators; use Secrets for sensitive data
 - Regularly rotate passwords and app-specific passwords
 
 ## Support

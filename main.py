@@ -21,36 +21,15 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def load_config(file_path: str):
-    """Load configuration (environment variables take priority over file)"""
+    """Load configuration from file"""
 
-    # Try loading full config from environment variables first (supports GitHub Variables)
-    env_config = os.environ.get("CONFIG_YAML") or os.environ.get("RSS_CONFIG")
-    if env_config:
-        try:
-            # Try parsing as YAML
-            config = yaml.safe_load(env_config)
-            print("✅ Using environment variable configuration (YAML format)")
-            return config
-        except yaml.YAMLError:
-            try:
-                # Try parsing as JSON
-                config = json.loads(env_config)
-                print("✅ Using environment variable configuration (JSON format)")
-                return config
-            except json.JSONDecodeError:
-                print(
-                    "⚠️ Environment variable configuration format error, trying file configuration"
-                )
-
-    # Load from file
-    config_file = os.environ.get("CONFIG_FILE", file_path)
-    if os.path.exists(config_file):
-        with open(config_file, "r", encoding="utf-8") as f:
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
-        print("✅ Using configuration file: %s" % config_file)
+        print("✅ Using configuration file: %s" % file_path)
         return config
 
-    raise FileNotFoundError("Configuration file or environment variables not found")
+    raise FileNotFoundError("Configuration file not found: %s" % file_path)
 
 
 def fetch_feed(url):

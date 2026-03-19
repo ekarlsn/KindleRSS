@@ -13,13 +13,10 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import yaml
-
 
 def load_email_config():
-    """Load email configuration (environment variables take priority)"""
+    """Load email configuration from environment variables"""
 
-    # Try loading from environment variables first
     env_config = {
         "smtp_server": os.environ.get("SMTP_SERVER"),
         "smtp_port": os.environ.get("SMTP_PORT"),
@@ -41,33 +38,16 @@ def load_email_config():
         "sender_password",
         "kindle_email",
     ]
-    if all(env_config.get(field) for field in required_fields):
-        print("✅ Using environment variable configuration")
-        # Convert port to integer
-        env_config["smtp_port"] = int(env_config["smtp_port"])
-        return env_config
-
-    # If environment variables are incomplete, try loading from config file
-    config_file = "email_config.yaml"
-    if not os.path.exists(config_file):
+    missing = [f for f in required_fields if not env_config.get(f)]
+    if missing:
         print(
-            "❌ Configuration file %s does not exist and environment variables are not set"
-            % config_file
+            "❌ Missing required environment variables: %s" % ", ".join(missing).upper()
         )
-        print("Please create the configuration file or set environment variables")
         return None
 
-    with open(config_file, "r", encoding="utf-8") as f:
-        config = yaml.safe_load(f)
-
-    # Validate required fields
-    for field in required_fields:
-        if field not in config:
-            print("❌ Configuration file missing required field: %s" % field)
-            return None
-
-    print("✅ Using configuration file")
-    return config
+    print("✅ Using environment variable configuration")
+    env_config["smtp_port"] = int(env_config["smtp_port"])
+    return env_config
 
 
 def get_latest_epub():
@@ -156,16 +136,13 @@ def main():
     """Main function"""
     parser = argparse.ArgumentParser(description="Send EPUB file to Kindle email")
     parser.add_argument("-f", "--file", help="Specify the EPUB file to send")
-    parser.add_argument(
-        "-c", "--config", default="email_config.yaml", help="Specify configuration file"
-    )
     args = parser.parse_args()
 
     # Load configuration
     config = load_email_config()
     if not config:
         print(
-            "\nPlease create an email_config.yaml file, refer to email_config.example.yaml"
+            "\nPlease set the required environment variables: SMTP_SERVER, SMTP_PORT, SENDER_EMAIL, SENDER_PASSWORD, KINDLE_EMAIL"
         )
         return
 

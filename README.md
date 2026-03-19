@@ -40,9 +40,12 @@ python main.py
 
 5. **Send to Kindle** (Optional)
 ```bash
-# Configure email settings
-cp email_config.example.yaml email_config.yaml
-# Edit email_config.yaml
+# Set required environment variables
+export SMTP_SERVER="smtp.gmail.com"
+export SMTP_PORT="587"
+export SENDER_EMAIL="your-email@gmail.com"
+export SENDER_PASSWORD="your-app-password"
+export KINDLE_EMAIL="your-kindle@kindle.com"
 
 # Send the latest EPUB
 python send_to_kindle.py
@@ -55,12 +58,9 @@ python rss_and_send.py
 
 1. **Fork this repository**
 
-2. **Configure GitHub Variables/Secrets**
+2. **Configure GitHub Secrets**
 
    In repository settings, configure:
-
-   **RSS Configuration** (Variables or Secrets):
-   - `CONFIG_YAML` - Complete config.yaml content
 
    **Email Configuration** (Secrets):
    - `SMTP_SERVER` - SMTP server address
@@ -124,9 +124,19 @@ Feeds:
     resolve_link: false
 ```
 
-### Email Configuration (email_config.yaml)
+### Email Configuration (Environment Variables)
 
-Refer to `email_config.example.yaml` to configure your SMTP server information.
+Configure email sending via environment variables:
+
+| Variable | Required | Description |
+|---|---|---|
+| `SMTP_SERVER` | ✅ | SMTP server address |
+| `SMTP_PORT` | ✅ | SMTP port (587/465/25) |
+| `SENDER_EMAIL` | ✅ | Sender email address |
+| `SENDER_PASSWORD` | ✅ | Email password or app-specific password |
+| `KINDLE_EMAIL` | ✅ | Kindle receiving email address |
+| `EMAIL_SUBJECT` | ☐ | Email subject (default: "RSS Feed") |
+| `EMAIL_BODY` | ☐ | Email body text |
 
 Supported email services:
 - Gmail (requires app-specific password)
@@ -143,7 +153,6 @@ Supported email services:
 ├── send_to_kindle.py       # Kindle email sender
 ├── rss_and_send.py        # Combined script
 ├── config.yaml            # RSS source configuration
-├── email_config.yaml      # Email configuration (to be created)
 ├── requirements.txt       # Python dependencies
 ├── .github/
 │   └── workflows/

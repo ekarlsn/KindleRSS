@@ -6,15 +6,15 @@ Automatically send generated RSS EPUB files to your Kindle device.
 ## Quick Start
 
 ### 1. Configure Email Settings
-Copy the example configuration file and edit:
-```bash
-cp email_config.example.yaml email_config.yaml
-```
+Set the following environment variables with your SMTP and Kindle email details:
 
-Edit `email_config.yaml` to fill in:
-- SMTP server information
-- Sender email and password
-- Kindle receiving email
+```bash
+export SMTP_SERVER="smtp.gmail.com"
+export SMTP_PORT="587"
+export SENDER_EMAIL="your-email@gmail.com"
+export SENDER_PASSWORD="your-app-password"
+export KINDLE_EMAIL="your-kindle@kindle.com"
+```
 
 ### 2. Configure Kindle Email
 1. Log in to your Amazon account
@@ -47,59 +47,65 @@ python send_to_kindle.py -f specific_file.epub
 
 ## Email Configuration Guide
 
+All email settings are configured via environment variables. The required variables are:
+
+| Variable | Description |
+|---|---|
+| `SMTP_SERVER` | SMTP server address |
+| `SMTP_PORT` | SMTP port (587/465/25) |
+| `SENDER_EMAIL` | Sender email address |
+| `SENDER_PASSWORD` | Email password or app-specific password |
+| `KINDLE_EMAIL` | Kindle receiving email address |
+| `EMAIL_SUBJECT` | *(Optional)* Email subject (default: "RSS Feed") |
+| `EMAIL_BODY` | *(Optional)* Email body text |
+
 ### Gmail
 1. **Enable 2-Factor Authentication**
 2. **Generate App Password**:
    - Go to Google Account settings
    - Security → 2-Step Verification → App passwords
    - Generate password for "Mail"
-   - Use this password in configuration
+   - Use this password as `SENDER_PASSWORD`
 
-**Configuration:**
-```yaml
-smtp_server: smtp.gmail.com
-smtp_port: 587
-sender_email: your-email@gmail.com
-sender_password: your-app-password  # Not your regular password!
-kindle_email: your-kindle@kindle.com
-subject: RSS Feed
-body: RSS subscription push - {datetime}
+```bash
+export SMTP_SERVER="smtp.gmail.com"
+export SMTP_PORT="587"
+export SENDER_EMAIL="your-email@gmail.com"
+export SENDER_PASSWORD="your-app-password"  # Not your regular password!
+export KINDLE_EMAIL="your-kindle@kindle.com"
 ```
 
 ### Outlook/Hotmail
-**Configuration:**
-```yaml
-smtp_server: smtp-mail.outlook.com
-smtp_port: 587
-sender_email: your-email@outlook.com
-sender_password: your-password
-kindle_email: your-kindle@kindle.com
+```bash
+export SMTP_SERVER="smtp-mail.outlook.com"
+export SMTP_PORT="587"
+export SENDER_EMAIL="your-email@outlook.com"
+export SENDER_PASSWORD="your-password"
+export KINDLE_EMAIL="your-kindle@kindle.com"
 ```
 
 ### QQ Mail
 1. **Enable SMTP service** in QQ Mail settings
 2. **Get authorization code** (not your QQ password)
 
-**Configuration:**
-```yaml
-smtp_server: smtp.qq.com
-smtp_port: 587  # or 465 for SSL
-sender_email: your-email@qq.com
-sender_password: your-authorization-code  # Not QQ password!
-kindle_email: your-kindle@kindle.com
+```bash
+export SMTP_SERVER="smtp.qq.com"
+export SMTP_PORT="587"  # or 465 for SSL
+export SENDER_EMAIL="your-email@qq.com"
+export SENDER_PASSWORD="your-authorization-code"  # Not QQ password!
+export KINDLE_EMAIL="your-kindle@kindle.com"
 ```
 
 ### 163 Mail
 1. **Enable SMTP/POP3 service** in 163 Mail settings
 2. **Get authorization code**
 
-**Configuration:**
-```yaml
-smtp_server: smtp.163.com
-smtp_port: 465  # SSL
-sender_email: your-email@163.com
-sender_password: your-authorization-code
-kindle_email: your-kindle@kindle.com
+```bash
+export SMTP_SERVER="smtp.163.com"
+export SMTP_PORT="465"  # SSL
+export SENDER_EMAIL="your-email@163.com"
+export SENDER_PASSWORD="your-authorization-code"
+export KINDLE_EMAIL="your-kindle@kindle.com"
 ```
 
 ### Other SMTP Servers
@@ -130,19 +136,7 @@ For other email providers, you need:
 - **Kindle apps**: `username@kindle.com`
 - **Multiple devices**: Each device may have a different email
 
-## Environment Variables (Alternative Configuration)
 
-Instead of `email_config.yaml`, you can use environment variables:
-
-```bash
-export SMTP_SERVER="smtp.gmail.com"
-export SMTP_PORT="587"
-export SENDER_EMAIL="your-email@gmail.com"
-export SENDER_PASSWORD="your-app-password"
-export KINDLE_EMAIL="your-kindle@kindle.com"
-export EMAIL_SUBJECT="RSS Feed"
-export EMAIL_BODY="RSS subscription push - $(date)"
-```
 
 ## Troubleshooting
 
@@ -209,51 +203,32 @@ python send_to_kindle.py -f test.txt
 
 Common log messages and meanings:
 
-- `❌ Configuration file not found` - Create `email_config.yaml`
-- `❌ Missing required field` - Check your YAML syntax
+- `❌ Missing required environment variables` - Set the variables listed in the error message
 - `❌ Authentication failed` - Wrong password/authorization code
 - `❌ Connection refused` - Wrong server/port or network issue
 - `⚠️ File size exceeds 25MB` - File too large for Kindle email
 
 ## Advanced Configuration
 
-### Custom Email Templates
+### Custom Email Subject and Body
 
-Customize email subject and body:
+Customize the email subject and body via environment variables:
 
-```yaml
-subject: "Daily RSS Digest - {date}"
-body: |
-  Your daily RSS digest is ready!
-
-  Generated on: {datetime}
-  File: {filename}
-
-  Happy reading!
+```bash
+export EMAIL_SUBJECT="Daily RSS Digest"
+export EMAIL_BODY="Your daily RSS digest is ready!"
 ```
-
-Available variables:
-- `{date}` - Current date (YYYY-MM-DD)
-- `{datetime}` - Current date and time
-- `{filename}` - EPUB filename
 
 ### Multiple Kindle Devices
 
-To send to multiple Kindle addresses:
+To send to multiple Kindle addresses, run the script multiple times with a different `KINDLE_EMAIL`:
 
-1. **Method 1**: Run script multiple times with different configs
 ```bash
 # Send to first Kindle
 KINDLE_EMAIL="kindle1@kindle.com" python send_to_kindle.py
 
 # Send to second Kindle
 KINDLE_EMAIL="kindle2@kindle.com" python send_to_kindle.py
-```
-
-2. **Method 2**: Create multiple config files
-```bash
-python send_to_kindle.py -c email_config_kindle1.yaml
-python send_to_kindle.py -c email_config_kindle2.yaml
 ```
 
 ### Scheduling with Cron
@@ -274,13 +249,9 @@ crontab -e
 ## Security Best Practices
 
 1. **Use App Passwords**: Never use your main email password
-2. **Secure Config Files**: Set appropriate file permissions
-   ```bash
-   chmod 600 email_config.yaml
-   ```
-3. **Environment Variables**: For servers, use environment variables instead of config files
-4. **Regular Rotation**: Periodically rotate app passwords
-5. **Monitor Access**: Check your email account for unusual activity
+2. **Protect Environment Variables**: Avoid logging or exposing env vars in shell history; use a `.env` file with restricted permissions if needed
+3. **Regular Rotation**: Periodically rotate app passwords
+4. **Monitor Access**: Check your email account for unusual activity
 
 ## Support
 
