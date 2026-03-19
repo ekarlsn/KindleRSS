@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 import base64
 import io
@@ -313,7 +315,7 @@ def download_and_add_image(book, url, img_id):
     return None
 
 
-def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=None):
+def convert_to_epub(feeds, load_images=True, feeds_config=None):
     """Convert RSS feeds into a formatted EPUB e-book"""
     book = epub.EpubBook()
 
@@ -751,31 +753,8 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None, custom_filename=
     book.add_item(epub.EpubNav())
 
     # Generate filename
-    if custom_filename:
-        # Use custom filename, replacing date placeholders
-        current_date = datetime.now()
-        replacements = {
-            "{year}": str(current_date.year),
-            "{month}": f"{current_date.month:02d}",
-            "{day}": f"{current_date.day:02d}",
-            "{hour}": f"{current_date.hour:02d}",
-            "{minute}": f"{current_date.minute:02d}",
-            "{second}": f"{current_date.second:02d}",
-            "{date}": current_date.strftime("%Y-%m-%d"),
-            "{time}": current_date.strftime("%H:%M"),
-            "{datetime}": current_date.strftime("%Y-%m-%d_%H-%M"),
-        }
-        filename = custom_filename
-        for placeholder, value in replacements.items():
-            filename = filename.replace(placeholder, value)
-
-        # Ensure the file extension is .epub
-        if not filename.endswith(".epub"):
-            filename += ".epub"
-    else:
-        # Default filename format
-        timestamp = current_date.strftime("%Y%m%d_%H%M%S")
-        filename = f"rss_feed_{timestamp}.epub"
+    timestamp = current_date.strftime("%Y%m%d_%H%M%S")
+    filename = f"rss_feed_{timestamp}.epub"
 
     # Write EPUB
     epub.write_epub(filename, book, {})
@@ -814,14 +793,10 @@ def generate_epub(config_path: str):
             }
             feeds_config[feed_title] = feed
 
-    # Get custom filename template if configured
-    custom_filename = config.get("Settings", {}).get("filename_template")
-
     convert_to_epub(
         all_feeds,
         config["Settings"].get("load_images", True),
         feeds_config,
-        custom_filename,
     )
 
 

@@ -91,7 +91,7 @@ Commit a `config.yaml` file to your repository root with your RSS sources:
 Settings:
   max_history: 7
   load_images: true
-  filename_template: "RSS_Digest_{date}.epub"
+  filename_template: "{date}"
 
 Feeds:
   - url: "https://feeds.feedburner.com/oreilly/radar"

@@ -1,7 +1,7 @@
 Settings:
   max_history: 7 # Keep articles from the last N days (0 = no limit)
   load_images: true # Download and embed images in the EPUB
-  filename_template: "RSS_Digest_{date}.epub"
+  filename_template: "{date}"
   # Available placeholders:
   # {year}, {month}, {day}, {hour}, {minute}, {second}
   # {date}     - Date           (2025-07-04)
