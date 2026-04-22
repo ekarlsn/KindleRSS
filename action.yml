@@ -110,7 +110,7 @@ runs:
           CONFIG_PATH="${{ inputs.config-path }}"
         fi
 
-        python "${GITHUB_ACTION_PATH}/rss_and_send.py" \
+        python "${GITHUB_ACTION_PATH}/src/rss_and_send.py" \
           --config "$CONFIG_PATH"
 
     - name: Upload EPUB artifact
