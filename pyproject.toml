@@ -17,6 +17,11 @@ dependencies = [
     "lxml>=4.9.3",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
 [project.scripts]
 kindle-rss = "main:main"
 kindle-rss-send = "send_to_kindle:main"

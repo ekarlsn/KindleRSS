@@ -59,6 +59,69 @@ def sanitize_filename(name):
     return "".join(c if c.isalnum() else "_" for c in name)
 
 
+def extract_content_from_html(html_string, config=None):
+    """Extract article content from an HTML string using selectors or readability.
+
+    This is the pure content-extraction step, separated from the HTTP fetch so
+    it can be called directly in tests with a locally-stored HTML file.
+
+    Args:
+        html_string: Raw HTML string to process
+        config: Parsing configuration, including selectors etc.
+
+    Returns:
+        Extracted HTML content string
+    """
+    soup = BeautifulSoup(html_string, "html.parser")
+
+    if config and isinstance(config, dict):
+        # Option 1: CSS selector extraction
+        if "selectors" in config:
+            selectors = config["selectors"]
+
+            # Remove unwanted elements
+            if "remove" in selectors:
+                remove_selectors = selectors["remove"]
+                if isinstance(remove_selectors, str):
+                    remove_selectors = [s.strip() for s in remove_selectors.split(",")]
+
+                for selector in remove_selectors:
+                    for elem in soup.select(selector):
+                        elem.decompose()
+
+            # Extract content
+            if "content" in selectors:
+                content_selectors = selectors["content"]
+                if isinstance(content_selectors, str):
+                    content_selectors = [
+                        s.strip() for s in content_selectors.split(",")
+                    ]
+
+                extracted_content = []
+                for selector in content_selectors:
+                    elements = soup.select(selector)
+                    if elements:
+                        for elem in elements:
+                            extracted_content.append(str(elem))
+                        break  # Stop at first matching selector
+
+                if extracted_content:
+                    return "\n".join(extracted_content)
+
+        # If config specifies readability or selector falls through, use fallback
+        if (
+            config.get("method") == "readability"
+            or config.get("fallback") == "readability"
+        ):
+            # Option 2: Use readability for automatic extraction
+            doc = Document(html_string)
+            return doc.summary()
+
+    # Default: use readability
+    doc = Document(html_string)
+    return doc.summary()
+
+
 def resolve_link_content(url, config=None):
     """Parse content from the original article link.
 
@@ -80,58 +143,7 @@ def resolve_link_content(url, config=None):
         if response.status_code != 200:
             return None
 
-        html_content = response.text
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        # If the config has selectors, use them first
-        if config and isinstance(config, dict):
-            # Option 1: CSS selector extraction
-            if "selectors" in config:
-                selectors = config["selectors"]
-
-                # Remove unwanted elements
-                if "remove" in selectors:
-                    remove_selectors = selectors["remove"]
-                    if isinstance(remove_selectors, str):
-                        remove_selectors = [
-                            s.strip() for s in remove_selectors.split(",")
-                        ]
-
-                    for selector in remove_selectors:
-                        for elem in soup.select(selector):
-                            elem.decompose()
-
-                # Extract content
-                if "content" in selectors:
-                    content_selectors = selectors["content"]
-                    if isinstance(content_selectors, str):
-                        content_selectors = [
-                            s.strip() for s in content_selectors.split(",")
-                        ]
-
-                    extracted_content = []
-                    for selector in content_selectors:
-                        elements = soup.select(selector)
-                        if elements:
-                            for elem in elements:
-                                extracted_content.append(str(elem))
-                            break  # Stop at first matching selector
-
-                    if extracted_content:
-                        return "\n".join(extracted_content)
-
-            # If config specifies readability or selector fails, use fallback
-            if (
-                config.get("method") == "readability"
-                or config.get("fallback") == "readability"
-            ):
-                # Option 2: Use readability for automatic extraction
-                doc = Document(html_content)
-                return doc.summary()
-
-        # Default: use readability
-        doc = Document(html_content)
-        return doc.summary()
+        return extract_content_from_html(response.text, config)
 
     except Exception as e:
         print("Link parsing failed %s: %s" % (url, e))
@@ -314,6 +326,79 @@ def download_and_add_image(book, url, img_id):
     except Exception:
         pass
     return None
+
+
+def render_article_body(title, pub_date, feed_name, content):
+    """Render the inner body HTML for a single article (no navigation, no page wrapper).
+
+    Args:
+        title: Article title
+        pub_date: Publication date string (e.g. "2026-03-26 12:00"), or empty string
+        feed_name: Name of the RSS feed / source, or empty string
+        content: Processed HTML content string for the article body
+
+    Returns:
+        HTML string for the article body, ready to embed inside a full XHTML page
+    """
+    return f"""
+                <hr/>
+                <center><h1>{title}</h1></center>
+                <p>
+                    <small>
+                        {f"Published: {pub_date}" if pub_date else ""}
+                        {f"Source: {feed_name}" if feed_name else ""}
+                    </small>
+                </p>
+                <br/>
+                <blockquote>
+                    {content}
+                </blockquote>
+            """
+
+
+def render_article_xhtml(title, body_html, navigation_bar=""):
+    """Render a complete XHTML article page suitable for embedding in an EPUB.
+
+    Args:
+        title: Article title (used in the <title> tag)
+        body_html: Inner body HTML, e.g. from render_article_body()
+        navigation_bar: Pre-built navigation HTML string (Prev/Next/TOC links)
+
+    Returns:
+        Complete XHTML string ready to assign to an EpubHtml chapter's content
+    """
+    return f"""
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>{title}</title>
+                <style>
+                    a {{ color: black; text-decoration: underline; }}
+                    .nav {{ margin: 20px 0; padding: 10px; }}
+                    img {{
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                        display: block;
+                        max-width: 100%;
+                        height: auto;
+                    }}
+                    figure {{
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }}
+                    p {{
+                        orphans: 2;
+                        widows: 2;
+                    }}
+                </style>
+            </head>
+            <body>
+                <center>
+                    <div class="nav">{navigation_bar}</div>
+                </center>
+                {body_html}
+            </body>
+            </html>
+            """
 
 
 def convert_to_epub(feeds, load_images=True, feeds_config=None):
@@ -592,20 +677,9 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None):
                 processed_content = re.sub(r"<img[^>]*>", "", processed_content)
 
             # Save base content; navigation will be added later
-            article_base_content = f"""
-                <hr/>
-                <center><h1>{entry.title}</h1></center>
-                <p>
-                    <small>
-                        {f"Published: {pub_date}" if pub_date else ""}
-                        {f"Source: {feed_name}" if feed_name else ""}
-                    </small>
-                </p>
-                <br/>
-                <blockquote>
-                    {processed_content}
-                </blockquote>
-            """
+            article_base_content = render_article_body(
+                entry.title, pub_date, feed_name, processed_content
+            )
 
             # Handle additional media images if present
             if load_images:
@@ -682,38 +756,11 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None):
             navigation_bar = " | ".join(nav_parts)
 
             # Build the full article page
-            article_content = f"""
-            <html xmlns="http://www.w3.org/1999/xhtml">
-            <head>
-                <title>{article_info["title"]}</title>
-                <style>
-                    a {{ color: black; text-decoration: underline; }}
-                    .nav {{ margin: 20px 0; padding: 10px; }}
-                    img {{
-                        page-break-inside: avoid;
-                        break-inside: avoid;
-                        display: block;
-                        max-width: 100%;
-                        height: auto;
-                    }}
-                    figure {{
-                        page-break-inside: avoid;
-                        break-inside: avoid;
-                    }}
-                    p {{
-                        orphans: 2;
-                        widows: 2;
-                    }}
-                </style>
-            </head>
-            <body>
-                <center>
-                    <div class="nav">{navigation_bar}</div>
-                </center>
-                {article_info["chapter"].base_content}
-            </body>
-            </html>
-            """
+            article_content = render_article_xhtml(
+                article_info["title"],
+                article_info["chapter"].base_content,
+                navigation_bar,
+            )
 
             article_info["chapter"].content = article_content
             del article_info["chapter"].base_content
