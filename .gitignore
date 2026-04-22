@@ -3,6 +3,7 @@ email_config.yaml
 config.yaml
 
 # Generated files
+build/
 *.epub
 *.log
 cron_log.txt

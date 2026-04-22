@@ -6,6 +6,7 @@ import io
 import json
 import os
 import re
+import zipfile
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
@@ -754,11 +755,19 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None):
 
     # Generate filename
     timestamp = current_date.strftime("%Y%m%d_%H%M%S")
-    filename = f"rss_feed_{timestamp}.epub"
+    os.makedirs("build", exist_ok=True)
+    filename = f"build/rss_feed_{timestamp}.epub"
 
     # Write EPUB
     epub.write_epub(filename, book, {})
     print("✅ EPUB e-book generated: %s" % filename)
+
+    # Unzip EPUB for browser preview (EPUB is a ZIP of XHTML files)
+    preview_dir = f"build/preview_{timestamp}"
+    with zipfile.ZipFile(filename, "r") as zf:
+        zf.extractall(preview_dir)
+    preview_path = os.path.abspath(os.path.join(preview_dir, "EPUB", "main_toc.xhtml"))
+    print("✅ HTML preview generated: %s" % preview_path)
 
 
 def parse_args() -> argparse.Namespace:
