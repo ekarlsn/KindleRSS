@@ -6,6 +6,26 @@ inputs:
     description: Path to config.yaml in the user repository
     required: false
     default: "config.yaml"
+  feed-url:
+    description: URL of a single RSS feed to process (activates single-feed mode)
+    required: false
+  feed-title:
+    description: Display title for the feed (defaults to the URL when empty)
+    required: false
+  resolve-link:
+    description: >
+      How to resolve article links.
+      Accepted values: trafilatura (default), readability, false (use RSS summary as-is).
+    required: false
+    default: "trafilatura"
+  load-images:
+    description: Whether to download and embed images ("true" or "false").
+    required: false
+    default: "true"
+  max-history:
+    description: Keep articles from the last N days (0 = no limit).
+    required: false
+    default: "7"
 
 runs:
   using: composite
@@ -33,6 +53,48 @@ runs:
         python -m pip install --upgrade pip
         pip install -r "${GITHUB_ACTION_PATH}/requirements.txt"
 
+    - name: Build single-feed config
+      if: ${{ inputs.feed-url != '' }}
+      shell: bash
+      env:
+        INPUT_FEED_URL: ${{ inputs.feed-url }}
+        INPUT_FEED_TITLE: ${{ inputs.feed-title }}
+        INPUT_RESOLVE_LINK: ${{ inputs.resolve-link }}
+        INPUT_LOAD_IMAGES: ${{ inputs.load-images }}
+        INPUT_MAX_HISTORY: ${{ inputs.max-history }}
+      run: |
+        python3 <<'PYEOF'
+        import os
+
+        feed_url    = os.environ["INPUT_FEED_URL"]
+        feed_title  = os.environ.get("INPUT_FEED_TITLE") or feed_url
+        resolve     = os.environ.get("INPUT_RESOLVE_LINK") or "trafilatura"
+        load_images = os.environ.get("INPUT_LOAD_IMAGES", "true").lower() != "false"
+        max_history = int(os.environ.get("INPUT_MAX_HISTORY") or "7")
+
+        if resolve == "false":
+            resolve_block = "    resolve_link: false"
+        else:
+            resolve_block = f'    resolve_link:\n      method: "{resolve}"'
+
+        config = (
+            f"Settings:\n"
+            f"  max_history: {max_history}\n"
+            f"  load_images: {str(load_images).lower()}\n"
+            f"\n"
+            f"Feeds:\n"
+            f'  - url: "{feed_url}"\n'
+            f'    title: "{feed_title}"\n'
+            f"{resolve_block}\n"
+        )
+
+        with open("_single_feed_config.yaml", "w") as fh:
+            fh.write(config)
+
+        print("Generated _single_feed_config.yaml:")
+        print(config)
+        PYEOF
+
     - name: Generate EPUB and send to Kindle
       shell: bash
       env:
@@ -42,8 +104,14 @@ runs:
         SENDER_PASSWORD: ${{ env.SENDER_PASSWORD }}
         KINDLE_EMAIL: ${{ env.KINDLE_EMAIL }}
       run: |
+        if [ -n "${{ inputs.feed-url }}" ]; then
+          CONFIG_PATH="_single_feed_config.yaml"
+        else
+          CONFIG_PATH="${{ inputs.config-path }}"
+        fi
+
         python "${GITHUB_ACTION_PATH}/rss_and_send.py" \
-          --config "${{ inputs.config-path }}"
+          --config "$CONFIG_PATH"
 
     - name: Upload EPUB artifact
       if: always()
