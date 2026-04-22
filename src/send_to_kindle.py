@@ -53,7 +53,7 @@ def load_email_config():
 def get_latest_epub():
     """Get the most recently generated EPUB file"""
     # Find all EPUB files (supports various naming formats)
-    epub_files = glob.glob("*.epub")
+    epub_files = glob.glob("build/*.epub")
     if not epub_files:
         print("❌ No EPUB file found")
         return None
