@@ -8,7 +8,7 @@ Settings:
   # {datetime} - Date and time  (2025-07-04_14-30)
 
 Feeds:
-  # Minimal entry — trafilatura is used by default and handles most sites well.
+  # Minimal entry — trafilatura is used by default
   - url: "https://example.com/feed.xml"
     title: "Example Blog"
 
@@ -17,7 +17,7 @@ Feeds:
     title: "Paused Feed"
     enabled: false
 
-  # Explicit trafilatura (same as the default, but spelled out).
+  # Explicit trafilatura (same as the default).
   - url: "https://example.com/trafilatura-site/feed.xml"
     title: "Trafilatura Site"
     resolve_link:
