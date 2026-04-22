@@ -8,7 +8,7 @@ Settings:
   # {datetime} - Date and time  (2025-07-04_14-30)
 
 Feeds:
-  # Minimal entry — enabled and readability resolve_link are the defaults.
+  # Minimal entry — trafilatura is used by default and handles most sites well.
   - url: "https://example.com/feed.xml"
     title: "Example Blog"
 
@@ -17,7 +17,19 @@ Feeds:
     title: "Paused Feed"
     enabled: false
 
-  # Override to use CSS selectors instead of readability.
+  # Explicit trafilatura (same as the default, but spelled out).
+  - url: "https://example.com/trafilatura-site/feed.xml"
+    title: "Trafilatura Site"
+    resolve_link:
+      method: "trafilatura"
+
+  # readability — strips aggressively, may drop link-heavy lists.
+  - url: "https://example.com/readability-site/feed.xml"
+    title: "Readability Site"
+    resolve_link:
+      method: "readability"
+
+  # CSS selector — most reliable when you know the site's HTML structure.
   - url: "https://example.com/selector-site/feed.xml"
     title: "Selector Site"
     resolve_link:
@@ -25,7 +37,6 @@ Feeds:
       selectors:
         content: "article, .post-content, main"
         remove: ".ads, .comments, script, style"
-      fallback: "readability"
 
   # Disable link resolution entirely — use the RSS summary as-is.
   - url: "https://example.com/summary-only/feed.xml"

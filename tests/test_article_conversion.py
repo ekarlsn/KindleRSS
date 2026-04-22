@@ -1,9 +1,10 @@
 """Snapshot tests for the article HTML conversion pipeline.
 
-Two tests, one clear contrast:
+Three tests, showing how different extraction methods handle the same page:
 
-  test_meteor_shower_readability   – default readability extraction (BUGGY: drops <ul> lists)
-  test_meteor_shower_css_selector  – CSS selector extraction via .post  (CORRECT: full content)
+  test_meteor_shower_trafilatura  – default extraction (preserves all lists)
+  test_meteor_shower_readability  – explicit readability (drops link-heavy lists)
+  test_meteor_shower_css_selector – explicit CSS selector (preserves all lists)
 
 Snapshots are plain .html files in tests/snapshots/ – open them in a browser
 to inspect the output visually.
@@ -32,14 +33,21 @@ def meteor_shower_html() -> str:
     return (FIXTURES_DIR / "perennids_meteor_shower.html").read_text(encoding="utf-8")
 
 
-def test_meteor_shower_readability(html_snapshot, meteor_shower_html):
-    """Default readability extraction – known to drop <ul> list items."""
+def test_meteor_shower_trafilatura(html_snapshot, meteor_shower_html):
+    """Default extraction via trafilatura – preserves all lists including link-heavy ones."""
     result = extract_content_from_html(meteor_shower_html)
     html_snapshot(result)
 
 
+def test_meteor_shower_readability(html_snapshot, meteor_shower_html):
+    """Explicit readability extraction – drops link-heavy list items."""
+    config = {"method": "readability"}
+    result = extract_content_from_html(meteor_shower_html, config=config)
+    html_snapshot(result)
+
+
 def test_meteor_shower_css_selector(html_snapshot, meteor_shower_html):
-    """CSS selector extraction via .post – preserves full article content."""
-    config = {"selectors": {"content": ".post"}}
+    """Explicit CSS selector extraction via .post – preserves full article content."""
+    config = {"method": "selector", "selectors": {"content": ".post"}}
     result = extract_content_from_html(meteor_shower_html, config=config)
     html_snapshot(result)

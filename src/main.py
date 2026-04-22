@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 import feedparser
 import requests
+import trafilatura
 import urllib3
 import yaml
 from bs4 import BeautifulSoup
@@ -60,64 +61,65 @@ def sanitize_filename(name):
 
 
 def extract_content_from_html(html_string, config=None):
-    """Extract article content from an HTML string using selectors or readability.
+    """Extract article content from an HTML string.
 
     This is the pure content-extraction step, separated from the HTTP fetch so
     it can be called directly in tests with a locally-stored HTML file.
 
+    Controlled by config["method"]:
+      "trafilatura" (default) — preserves lists, code blocks, and tables
+      "readability"           — strips aggressively; loses link-heavy lists
+      "selector"              — CSS selector defined in config["selectors"]
+
     Args:
         html_string: Raw HTML string to process
-        config: Parsing configuration, including selectors etc.
+        config: Parsing configuration dict, or None for the default
 
     Returns:
         Extracted HTML content string
     """
-    soup = BeautifulSoup(html_string, "html.parser")
-
+    method = "trafilatura"
     if config and isinstance(config, dict):
-        # Option 1: CSS selector extraction
-        if "selectors" in config:
-            selectors = config["selectors"]
+        method = config.get("method", "trafilatura")
 
-            # Remove unwanted elements
-            if "remove" in selectors:
-                remove_selectors = selectors["remove"]
-                if isinstance(remove_selectors, str):
-                    remove_selectors = [s.strip() for s in remove_selectors.split(",")]
+    if method == "selector":
+        soup = BeautifulSoup(html_string, "html.parser")
+        selectors = config.get("selectors", {})
 
-                for selector in remove_selectors:
-                    for elem in soup.select(selector):
-                        elem.decompose()
+        if "remove" in selectors:
+            remove_selectors = selectors["remove"]
+            if isinstance(remove_selectors, str):
+                remove_selectors = [s.strip() for s in remove_selectors.split(",")]
+            for selector in remove_selectors:
+                for elem in soup.select(selector):
+                    elem.decompose()
 
-            # Extract content
-            if "content" in selectors:
-                content_selectors = selectors["content"]
-                if isinstance(content_selectors, str):
-                    content_selectors = [
-                        s.strip() for s in content_selectors.split(",")
-                    ]
+        if "content" in selectors:
+            content_selectors = selectors["content"]
+            if isinstance(content_selectors, str):
+                content_selectors = [s.strip() for s in content_selectors.split(",")]
+            extracted_content = []
+            for selector in content_selectors:
+                elements = soup.select(selector)
+                if elements:
+                    for elem in elements:
+                        extracted_content.append(str(elem))
+                    break
+            if extracted_content:
+                return "\n".join(extracted_content)
+        # Selector matched nothing — fall through to trafilatura
+        method = "trafilatura"
 
-                extracted_content = []
-                for selector in content_selectors:
-                    elements = soup.select(selector)
-                    if elements:
-                        for elem in elements:
-                            extracted_content.append(str(elem))
-                        break  # Stop at first matching selector
+    if method == "readability":
+        doc = Document(html_string)
+        return doc.summary()
 
-                if extracted_content:
-                    return "\n".join(extracted_content)
+    # trafilatura (default)
+    result = trafilatura.extract(html_string, include_links=True, output_format="html")
+    if result:
+        return result
 
-        # If config specifies readability or selector falls through, use fallback
-        if (
-            config.get("method") == "readability"
-            or config.get("fallback") == "readability"
-        ):
-            # Option 2: Use readability for automatic extraction
-            doc = Document(html_string)
-            return doc.summary()
-
-    # Default: use readability
+    # Last resort if trafilatura returns nothing
     doc = Document(html_string)
     return doc.summary()
 
@@ -641,7 +643,7 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None):
 
             # Check if we need to resolve content from the original link
             feed_config = feeds_config.get(feed_name, {}) if feeds_config else {}
-            resolve_config = feed_config.get("resolve_link", {"method": "readability"})
+            resolve_config = feed_config.get("resolve_link", {"method": "trafilatura"})
 
             if resolve_config and entry.get("link"):
                 resolved_content = resolve_link_content(entry.link, resolve_config)
