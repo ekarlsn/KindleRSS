@@ -642,20 +642,37 @@ def convert_to_epub(feeds, load_images=True, feeds_config=None):
             )
 
             # Check if we need to resolve content from the original link
-            feed_config = feeds_config.get(feed_name, {}) if feeds_config else {}
+            # Use feed_key (the config title) not feed_name (the RSS feed title) to
+            # avoid a mismatch between the two
+            feed_config = feeds_config.get(feed_key, {}) if feeds_config else {}
             resolve_config = feed_config.get("resolve_link", {"method": "trafilatura"})
 
-            if resolve_config and entry.get("link"):
-                resolved_content = resolve_link_content(entry.link, resolve_config)
-                if resolved_content:
-                    # Successfully resolved, use parsed content
-                    raw_content = resolved_content
-                    print("  ✓ Parsed original content: %s..." % entry.title[:30])
-                else:
-                    print(
-                        "  ✗ Unable to parse original content, using RSS summary: %s..."
-                        % entry.title[:30]
+            if resolve_config:
+                # If the RSS feed provides full article content, process it directly
+                # with trafilatura instead of fetching the URL (avoids bot-blocking)
+                if entry.get("content"):
+                    resolved_content = extract_content_from_html(
+                        entry.content[0].value, resolve_config
                     )
+                    if resolved_content:
+                        raw_content = resolved_content
+                        print("  ✓ Parsed RSS full content: %s..." % entry.title[:30])
+                    else:
+                        print(
+                            "  ✗ Unable to parse RSS content, using summary: %s..."
+                            % entry.title[:30]
+                        )
+                elif entry.get("link"):
+                    resolved_content = resolve_link_content(entry.link, resolve_config)
+                    if resolved_content:
+                        # Successfully resolved, use parsed content
+                        raw_content = resolved_content
+                        print("  ✓ Parsed original content: %s..." % entry.title[:30])
+                    else:
+                        print(
+                            "  ✗ Unable to parse original content, using RSS summary: %s..."
+                            % entry.title[:30]
+                        )
 
             # Process images in the content
             processed_content = raw_content
