@@ -48,10 +48,14 @@ def filter_entries(entries, max_history):
     cutoff_date = datetime.now() - timedelta(days=max_history)
     filtered = []
     for entry in entries:
-        if "published_parsed" in entry:
-            entry_date = datetime(*entry.published_parsed[:6])
+        parsed = entry.get("published_parsed") or entry.get("updated_parsed")
+        if parsed:
+            entry_date = datetime(*parsed[:6])
             if entry_date >= cutoff_date:
                 filtered.append(entry)
+        else:
+            # No date available — include the entry rather than silently dropping it
+            filtered.append(entry)
     return filtered
 
 
